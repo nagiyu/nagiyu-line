@@ -1,0 +1,69 @@
+# name: deploy-finance
+
+# on:
+#   push:
+#     branches:
+#       - master
+#     paths:
+#       - finance
+#       - '.github/workflows/deploy-finance.yml'
+
+# jobs:
+#   build:
+#     runs-on: ubuntu-latest
+
+#     steps:
+#     - uses: actions/checkout@v2
+
+#     - name: Update submodule
+#       run: git submodule update --init --recursive
+
+#     - name: Setup .NET Core
+#       uses: actions/setup-dotnet@v1
+#       with:
+#         dotnet-version: 8.0.x
+
+#     - name: Publish with dotnet
+#       run: dotnet publish --configuration Release finance/Finance/Finance.csproj
+
+#     - name: Copy files
+#       run: cp -r finance/Finance/bin/Release/net8.0/publish finance/containers/management/bin
+
+#     - name: Remove all files in target path
+#       uses: appleboy/ssh-action@master
+#       with:
+#         host: ${{ secrets.SSH_HOST }}
+#         username: ${{ secrets.SSH_USERNAME }}
+#         key: ${{ secrets.SSH_PRIVATE_KEY }}
+#         port: ${{ secrets.SSH_PORT }}
+#         script: |
+#           cd ${{ secrets.TARGET_PATH }}/finance/containers
+#           docker compose -f docker-compose-scraper.yml -p finance down
+#           docker compose -f docker-compose.yml -p finance down
+#           docker volume prune -f && docker image prune -f && docker builder prune -f
+#           sudo rm -Rf *
+
+#     - name: Upload artifact to server
+#       uses: appleboy/scp-action@master
+#       with:
+#         host: ${{ secrets.SSH_HOST }}
+#         username: ${{ secrets.SSH_USERNAME }}
+#         key: ${{ secrets.SSH_PRIVATE_KEY }}
+#         port: ${{ secrets.SSH_PORT }}
+#         source: finance/containers/*
+#         target: ${{ secrets.TARGET_PATH }}
+
+#     - name: Recreate Finance
+#       uses: appleboy/ssh-action@master
+#       with:
+#         host: ${{ secrets.SSH_HOST }}
+#         username: ${{ secrets.SSH_USERNAME }}
+#         key: ${{ secrets.SSH_PRIVATE_KEY }}
+#         port: ${{ secrets.SSH_PORT }}
+#         script: |
+#           cd ${{ secrets.TARGET_PATH }}/finance/containers
+#           sed -i 's/PGADMIN_DEFAULT_PASSWORD=Password123!/PGADMIN_DEFAULT_PASSWORD=${{ secrets.PGADMIN_DEFAULT_PASSWORD }}/g' docker-compose.yml
+#           docker compose -f docker-compose.yml build --no-cache
+#           docker compose -f docker-compose-scraper.yml build --no-cache
+#           docker compose -f docker-compose.yml -p finance up -d
+#           docker compose -f docker-compose-scraper.yml -p finance up -d
