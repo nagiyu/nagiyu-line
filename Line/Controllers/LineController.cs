@@ -13,11 +13,13 @@ namespace Line.Controllers
 {
     public class LineController : Controller
     {
+        private readonly string outputPath;
         private readonly string channelAccessToken;
         private readonly HttpClient httpClient;
 
         public LineController(IOptions<LineSettings> options, HttpClient httpClient)
         {
+            outputPath = options.Value.OutputPath;
             channelAccessToken = options.Value.ChannelAccessToken;
             this.httpClient = httpClient;
         }
@@ -25,6 +27,9 @@ namespace Line.Controllers
         [HttpPost]
         public async Task<IActionResult> SendMessage([FromBody] WebhookRequest request)
         {
+            // リクエストをログに出力する
+            System.IO.File.WriteAllText(outputPath, JsonConvert.SerializeObject(request));
+
             if (request?.Events == null || request.Events.Count == 0)
             {
                 return BadRequest("Invalid payload");
