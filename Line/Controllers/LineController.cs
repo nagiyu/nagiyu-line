@@ -13,17 +13,18 @@ namespace Line.Controllers
     public class LineController : Controller
     {
         private readonly string channelAccessToken;
+        private readonly HttpClient httpClient;
 
-        public LineController(IOptions<LineSettings> options)
+        public LineController(IOptions<LineSettings> options, HttpClient httpClient)
         {
             channelAccessToken = options.Value.ChannelAccessToken;
+            this.httpClient = httpClient;
         }
 
         [HttpPost]
         public async Task<IActionResult> SendMessage(string userId, string message)
         {
             var url = "https://api.line.me/v2/bot/message/push";
-            var httpClient = new HttpClient();
 
             httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", channelAccessToken);
 
