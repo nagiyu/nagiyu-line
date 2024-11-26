@@ -81,6 +81,43 @@ namespace Line.Controllers
 
             if (response.IsSuccessStatusCode)
             {
+            }
+            else
+            {
+                var errorMessage = await response.Content.ReadAsStringAsync();
+                System.IO.File.AppendAllText(outputPath, $"Error: {errorMessage}\n");
+                return BadRequest($"エラーが発生しました: {errorMessage}");
+            }
+
+            url = "https://api.line.me/v2/bot/message/push";
+
+            httpClient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+            httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", channelAccessToken);
+
+            var pushPayload = new
+            {
+                To = replyToken,
+                Messages = new List<ReplyMessage>
+                {
+                    new ReplyMessage
+                    {
+                        Type = "text",
+                        Text = "Push Message"
+                    }
+                }
+            };
+
+            // payload の JSON のキーをキャメルケースにする
+            json = JsonConvert.SerializeObject(pushPayload, new JsonSerializerSettings
+            {
+                ContractResolver = new Newtonsoft.Json.Serialization.CamelCasePropertyNamesContractResolver()
+            });
+            content = new StringContent(json, Encoding.UTF8, "application/json");
+
+            response = await httpClient.PostAsync(url, content);
+
+            if (response.IsSuccessStatusCode)
+            {
                 return Ok("メッセージが送信されました。");
             }
             else
