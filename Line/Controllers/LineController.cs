@@ -1,4 +1,5 @@
-﻿using System.Net.Http;
+﻿using System.Collections.Generic;
+using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Text;
 using System.Threading.Tasks;
@@ -22,21 +23,44 @@ namespace Line.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> SendMessage(string userId, string message)
+        public async Task<IActionResult> SendMessage([FromBody] WebhookRequest request)
         {
-            var url = "https://api.line.me/v2/bot/message/push";
+            if (request?.Events == null || request.Events.Count == 0)
+            {
+                return BadRequest("Invalid payload");
+            }
 
+            // リクエストの type が message でない場合は無視する
+            var messageEvent = request.Events[0];
+            if (messageEvent.Type != "message")
+            {
+                return Ok();
+            }
+
+            // message の type が text でない場合は無視する
+            var message = messageEvent.Message;
+            if (message.Type != "text")
+            {
+                return Ok();
+            }
+
+            // replyToken を取得する
+            var replyToken = messageEvent.ReplyToken;
+
+            var url = "https://api.line.me/v2/bot/message/reply";
+
+            httpClient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
             httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", channelAccessToken);
 
-            var payload = new
+            var payload = new ReplyRequest
             {
-                to = userId,
-                messages = new[]
+                ReplyToken = replyToken,
+                Messages = new List<ReplyMessage>
                 {
-                    new
+                    new ReplyMessage
                     {
-                        type = "text",
-                        text = message
+                        Type = "text",
+                        Text = message.Text
                     }
                 }
             };
