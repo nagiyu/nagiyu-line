@@ -1,6 +1,6 @@
-# name: deploy-finance
+name: deploy-finance
 
-# on:
+on:
 #   push:
 #     branches:
 #       - master
@@ -8,8 +8,8 @@
 #       - finance
 #       - '.github/workflows/deploy-finance.yml'
 
-# jobs:
-#   build:
+jobs:
+  build:
 #     runs-on: ubuntu-latest
 
 #     steps:
