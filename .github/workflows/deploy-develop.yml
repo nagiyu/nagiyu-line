@@ -18,10 +18,10 @@ jobs:
         dotnet-version: 8.0.x
 
     - name: Publish with dotnet
-      run: dotnet publish --configuration Release Line/Line.csproj
+      run: dotnet publish --configuration Debug Line/Line.csproj
 
     - name: Copy files
-      run: cp -r Line/bin/Release/net8.0/publish containers/line/bin
+      run: cp -r Line/bin/Debug/net8.0/publish containers/line/bin
 
     - name: Add .env
       run: echo "${{ secrets.DEVELOP_ENV }}" > containers/.env
