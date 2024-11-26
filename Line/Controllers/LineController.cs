@@ -89,6 +89,9 @@ namespace Line.Controllers
                 return BadRequest($"エラーが発生しました: {errorMessage}");
             }
 
+            // userId を取得する
+            var userId = messageEvent.Source.UserId;
+
             url = "https://api.line.me/v2/bot/message/push";
 
             httpClient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
@@ -96,7 +99,7 @@ namespace Line.Controllers
 
             var pushPayload = new
             {
-                To = replyToken,
+                To = userId,
                 Messages = new List<ReplyMessage>
                 {
                     new ReplyMessage
