@@ -54,6 +54,7 @@ jobs:
         port: ${{ secrets.SSH_PORT }}
         script: |
           sudo cp ${{ secrets.DEVELOP_TARGET_PATH }}/nginx/* /etc/nginx/sites-available/
+          sudo ln -s /etc/nginx/sites-available/* /etc/nginx/sites-enabled/
           sudo systemctl restart nginx
 
     - name: Remove all files in target path
