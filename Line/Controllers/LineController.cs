@@ -70,7 +70,11 @@ namespace Line.Controllers
                 }
             };
 
-            var json = JsonConvert.SerializeObject(payload);
+            // payload の JSON のキーをキャメルケースにする
+            var json = JsonConvert.SerializeObject(payload, new JsonSerializerSettings
+            {
+                ContractResolver = new Newtonsoft.Json.Serialization.CamelCasePropertyNamesContractResolver()
+            });
             var content = new StringContent(json, Encoding.UTF8, "application/json");
 
             var response = await httpClient.PostAsync(url, content);
@@ -82,6 +86,7 @@ namespace Line.Controllers
             else
             {
                 var errorMessage = await response.Content.ReadAsStringAsync();
+                System.IO.File.AppendAllText(outputPath, $"Error: {errorMessage}\n");
                 return BadRequest($"エラーが発生しました: {errorMessage}");
             }
         }
