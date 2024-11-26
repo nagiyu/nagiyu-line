@@ -25,10 +25,12 @@ namespace Line.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> SendMessage([FromBody] WebhookRequest request)
+        public async Task<IActionResult> SendMessage([FromBody] object baseRequest)
         {
             // リクエストをログに出力する
-            System.IO.File.WriteAllText(outputPath, JsonConvert.SerializeObject(request));
+            System.IO.File.WriteAllText(outputPath, JsonConvert.SerializeObject(baseRequest));
+
+            var request = baseRequest as WebhookRequest;
 
             if (request?.Events == null || request.Events.Count == 0)
             {
