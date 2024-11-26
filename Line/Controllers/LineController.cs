@@ -34,7 +34,7 @@ namespace Line.Controllers
 
             if (request?.Events == null || request.Events.Count == 0)
             {
-                return BadRequest("Invalid payload");
+                return Ok();
             }
 
             // リクエストの type が message でない場合は無視する
