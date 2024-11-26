@@ -24,21 +24,20 @@ jobs:
       run: cp -r Line/bin/Release/net8.0/publish containers/line/bin
 
     - name: Add .env
-      run: echo ${{ secrets.DEVELOP_ENV }} > containers/.env
+      run: echo "${{ secrets.DEVELOP_ENV }}" > containers/.env
 
-#     - name: Remove all files in target path
-#       uses: appleboy/ssh-action@master
-#       with:
-#         host: ${{ secrets.SSH_HOST }}
-#         username: ${{ secrets.SSH_USERNAME }}
-#         key: ${{ secrets.SSH_PRIVATE_KEY }}
-#         port: ${{ secrets.SSH_PORT }}
-#         script: |
-#           cd ${{ secrets.TARGET_PATH }}/finance/containers
-#           docker compose -f docker-compose-scraper.yml -p finance down
-#           docker compose -f docker-compose.yml -p finance down
-#           docker volume prune -f && docker image prune -f && docker builder prune -f
-#           sudo rm -Rf *
+    - name: Remove all files in target path
+      uses: appleboy/ssh-action@master
+      with:
+        host: ${{ secrets.SSH_HOST }}
+        username: ${{ secrets.SSH_USERNAME }}
+        key: ${{ secrets.SSH_PRIVATE_KEY }}
+        port: ${{ secrets.SSH_PORT }}
+        script: |
+          cd ${{ secrets.DEVELOP_TARGET_PATH }}/containers
+          docker compose -f docker-compose.yml -p develop_finance down
+          docker volume prune -f && docker image prune -f && docker builder prune -f
+          sudo rm -Rf *
 
     - name: Upload artifact to server
       uses: appleboy/scp-action@master
