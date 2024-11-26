@@ -1,19 +1,19 @@
-# name: deploy-finance
+name: deploy
 
-# on:
-#   push:
-#     branches:
-#       - master
+on:
+  push:
+    branches:
+      - master
 #     paths:
 #       - finance
 #       - '.github/workflows/deploy-finance.yml'
 
-# jobs:
-#   build:
-#     runs-on: ubuntu-latest
+jobs:
+  build:
+    runs-on: ubuntu-latest
 
-#     steps:
-#     - uses: actions/checkout@v2
+    steps:
+    - uses: actions/checkout@v2
 
 #     - name: Update submodule
 #       run: git submodule update --init --recursive

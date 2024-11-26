@@ -13,6 +13,7 @@
             "humao.rest-client",
             "wmaurer.change-case",
             "adpyke.vscode-sql-formatter",
+            "ms-vscode-remote.remote-ssh",
         ]
     },
     "settings": {
