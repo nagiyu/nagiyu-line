@@ -21,8 +21,6 @@ server {
 	server_name dev-line.nagiyu.com;
 
 	location / {
-		allow x.x.x.x;
-
 		proxy_pass http://localhost:9013;
 		proxy_http_version 1.1;
 		proxy_set_header Upgrade $http_upgrade;
