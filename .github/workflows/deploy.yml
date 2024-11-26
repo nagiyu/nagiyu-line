@@ -1,9 +1,9 @@
-name: deploy-finance
+name: deploy
 
 on:
-#   push:
-#     branches:
-#       - master
+  push:
+    branches:
+      - master
 #     paths:
 #       - finance
 #       - '.github/workflows/deploy-finance.yml'
