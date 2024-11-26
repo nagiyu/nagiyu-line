@@ -26,6 +26,36 @@ jobs:
     - name: Add .env
       run: echo "${{ secrets.DEVELOP_ENV }}" > containers/.env
 
+    # - name: Remove Nginx Settings in target path
+    #   uses: appleboy/ssh-action@master
+    #   with:
+    #     host: ${{ secrets.SSH_HOST }}
+    #     username: ${{ secrets.SSH_USERNAME }}
+    #     key: ${{ secrets.SSH_PRIVATE_KEY }}
+    #     port: ${{ secrets.SSH_PORT }}
+    #     script: sudo rm -rf ${{ secrets.DEVELOP_TARGET_PATH }}/nginx
+
+    - name: Upload Nginx Settings to server
+      uses: appleboy/scp-action@master
+      with:
+        host: ${{ secrets.SSH_HOST }}
+        username: ${{ secrets.SSH_USERNAME }}
+        key: ${{ secrets.SSH_PRIVATE_KEY }}
+        port: ${{ secrets.SSH_PORT }}
+        source: nginx/*
+        target: ${{ secrets.DEVELOP_TARGET_PATH }}
+
+    - name: Replace nginx configuration and Reload nginx
+      uses: appleboy/ssh-action@master
+      with:
+        host: ${{ secrets.SSH_HOST }}
+        username: ${{ secrets.SSH_USERNAME }}
+        key: ${{ secrets.SSH_PRIVATE_KEY }}
+        port: ${{ secrets.SSH_PORT }}
+        script: |
+          sudo cp ${{ secrets.DEVELOP_TARGET_PATH }}/nginx/* /etc/nginx/sites-available/
+          sudo systemctl restart nginx
+
     - name: Remove all files in target path
       uses: appleboy/ssh-action@master
       with:
@@ -34,10 +64,13 @@ jobs:
         key: ${{ secrets.SSH_PRIVATE_KEY }}
         port: ${{ secrets.SSH_PORT }}
         script: |
+          cd ${{ secrets.DEVELOP_TARGET_PATH }}/nginx
+          sudo rm -rf line
           cd ${{ secrets.DEVELOP_TARGET_PATH }}/containers
           docker compose -f docker-compose.yml -p develop_line down
           docker volume prune -f && docker image prune -f && docker builder prune -f
           sudo rm -Rf *
+
 
     - name: Upload artifact to server
       uses: appleboy/scp-action@master

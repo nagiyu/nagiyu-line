@@ -1,20 +1,20 @@
-server {
-	listen 80;
-	server_name line.nagiyu.com;
+# server {
+# 	listen 80;
+# 	server_name line.nagiyu.com;
 
-	location / {
-		allow x.x.x.x;
+# 	location / {
+# 		allow x.x.x.x;
 
-		proxy_pass http://localhost:9008; # TODO: Temp
-		proxy_http_version 1.1;
-		proxy_set_header Upgrade $http_upgrade;
-		proxy_set_header Connection "upgrade";
-		proxy_set_header Host $host;
-		proxy_set_header X-Real-IP $remote_addr;
-		proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
-		proxy_set_header X-Forwarded-Proto $scheme;
-	}
-}
+# 		proxy_pass http://localhost:9008; # TODO: Temp
+# 		proxy_http_version 1.1;
+# 		proxy_set_header Upgrade $http_upgrade;
+# 		proxy_set_header Connection "upgrade";
+# 		proxy_set_header Host $host;
+# 		proxy_set_header X-Real-IP $remote_addr;
+# 		proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+# 		proxy_set_header X-Forwarded-Proto $scheme;
+# 	}
+# }
 
 server {
 	listen 80;
@@ -23,7 +23,7 @@ server {
 	location / {
 		allow x.x.x.x;
 
-		proxy_pass http://localhost:9011; # TODO: Temp
+		proxy_pass http://localhost:9013;
 		proxy_http_version 1.1;
 		proxy_set_header Upgrade $http_upgrade;
 		proxy_set_header Connection "upgrade";
