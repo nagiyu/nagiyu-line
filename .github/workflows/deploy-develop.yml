@@ -27,9 +27,7 @@ jobs:
       run: echo "${{ secrets.DEVELOP_ENV }}" > containers/.env
 
     - name: Update appsettings.json
-      env:
-        CHANNEL_ACCESS_TOKEN: ${{ secrets.CHANNEL_ACCESS_TOKEN }}
-      run: sed -i 's/"ChannelAccessToken": ""/"ChannelAccessToken": "'$CHANNEL_ACCESS_TOKEN'"/g' containers/line/bin/Release/net8.0/publish/appsettings.json
+      run : echo ${{ secrets.DEVELOP_APPSETTINGS }} > containers/line/bin/Release/net8.0/publish/appsettings.json
 
     - name: Remove Nginx Settings in target path
       uses: appleboy/ssh-action@master
