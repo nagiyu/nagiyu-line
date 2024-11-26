@@ -49,7 +49,7 @@ jobs:
         source: containers/*
         target: ${{ secrets.DEVELOP_TARGET_PATH }}
 
-    - name: Recreate Finance
+    - name: Recreate Line
       uses: appleboy/ssh-action@master
       with:
         host: ${{ secrets.SSH_HOST }}
@@ -59,4 +59,4 @@ jobs:
         script: |
           cd ${{ secrets.DEVELOP_TARGET_PATH }}/containers
           docker compose -f docker-compose.yml build --no-cache
-          docker compose -f docker-compose.yml -p develop_finance up -d
+          docker compose -f docker-compose.yml -p develop_line up -d
