@@ -8,7 +8,7 @@ namespace Line.Models
     /// <summary>
     /// Webhookイベントのリクエストボディ
     /// </summary>
-    public class WebhookRequest<T> where T : WebhookEventBase
+    public class WebhookRequest<T> where T : MessageBase
     {
         /// <summary>
         /// Webhookイベントを受信すべきボットのユーザーID
@@ -18,6 +18,6 @@ namespace Line.Models
         /// <summary>
         /// Webhookイベントオブジェクトの配列
         /// </summary>
-        public List<MessageEvent<TextMessage>> Events { get; set; }
+        public List<MessageEvent<T>> Events { get; set; }
     }
 }
