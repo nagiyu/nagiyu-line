@@ -8,7 +8,7 @@ namespace Line.Models.WebhookEvents
     /// <summary>
     /// メッセージイベント
     /// </summary>
-    public class MessageEvent : WebhookEventBase
+    public class MessageEvent<T> : WebhookEventBase where T : MessageBase
     {
         /// <summary>
         /// 応答メッセージを送る際に使用する応答トークン
@@ -18,6 +18,6 @@ namespace Line.Models.WebhookEvents
         /// <summary>
         /// メッセージの内容を含むオブジェクト
         /// </summary>
-        public MessageBase Message { get; set; }
+        public T Message { get; set; }
     }
 }

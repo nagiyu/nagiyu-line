@@ -6,7 +6,7 @@ namespace Line.Models
     /// <summary>
     /// Webhookイベントのリクエストボディ
     /// </summary>
-    public class WebhookRequest
+    public class WebhookRequest<T> where T : WebhookEventBase
     {
         /// <summary>
         /// Webhookイベントを受信すべきボットのユーザーID
@@ -16,6 +16,6 @@ namespace Line.Models
         /// <summary>
         /// Webhookイベントオブジェクトの配列
         /// </summary>
-        public List<WebhookEventBase> Events { get; set; }
+        public List<T> Events { get; set; }
     }
 }
