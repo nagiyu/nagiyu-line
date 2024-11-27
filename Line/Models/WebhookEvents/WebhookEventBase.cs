@@ -85,6 +85,17 @@ namespace Line.Models.WebhookEvents
         public string WebhookEventId { get; set; }
 
         /// <summary>
+        /// 送信のコンテキスト
+        /// </summary>
+        public DeliveryContext DeliveryContext { get; set; }
+    }
+
+    /// <summary>
+    /// 送信のコンテキスト
+    /// </summary>
+    public class DeliveryContext
+    {
+        /// <summary>
         /// Webhookイベントが再送されたものかどうか
         /// </summary>
         public bool IsRedelivery { get; set; }
