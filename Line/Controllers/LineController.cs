@@ -9,6 +9,10 @@ using Microsoft.Extensions.Options;
 
 using Newtonsoft.Json;
 
+using Line.Models;
+using Line.Models.WebhookEvents;
+using Line.Models.WebhookEvents.MessageObjects;
+
 namespace Line.Controllers
 {
     public class LineController : Controller
@@ -37,20 +41,20 @@ namespace Line.Controllers
 
             // リクエストの type が message でない場合は無視する
             var messageEvent = request.Events[0];
-            if (messageEvent.Type != "message")
+            if (messageEvent.Type != WebhookEventType.Message)
             {
                 return Ok();
             }
 
             // message の type が text でない場合は無視する
-            var message = messageEvent.Message;
-            if (message.Type != "text")
+            var message = (messageEvent as MessageEvent).Message as TextMessage;
+            if (message.Type != MessageType.Text)
             {
                 return Ok();
             }
 
             // replyToken を取得する
-            var replyToken = messageEvent.ReplyToken;
+            var replyToken = (messageEvent as MessageEvent).ReplyToken;
 
             var url = "https://api.line.me/v2/bot/message/reply";
 
@@ -78,46 +82,6 @@ namespace Line.Controllers
             var content = new StringContent(json, Encoding.UTF8, "application/json");
 
             var response = await httpClient.PostAsync(url, content);
-
-            if (response.IsSuccessStatusCode)
-            {
-            }
-            else
-            {
-                var errorMessage = await response.Content.ReadAsStringAsync();
-                System.IO.File.AppendAllText(outputPath, $"Error: {errorMessage}\n");
-                return BadRequest($"エラーが発生しました: {errorMessage}");
-            }
-
-            // userId を取得する
-            var userId = messageEvent.Source.UserId;
-
-            url = "https://api.line.me/v2/bot/message/push";
-
-            httpClient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
-            httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", channelAccessToken);
-
-            var pushPayload = new
-            {
-                To = userId,
-                Messages = new List<ReplyMessage>
-                {
-                    new ReplyMessage
-                    {
-                        Type = "text",
-                        Text = "Push Message"
-                    }
-                }
-            };
-
-            // payload の JSON のキーをキャメルケースにする
-            json = JsonConvert.SerializeObject(pushPayload, new JsonSerializerSettings
-            {
-                ContractResolver = new Newtonsoft.Json.Serialization.CamelCasePropertyNamesContractResolver()
-            });
-            content = new StringContent(json, Encoding.UTF8, "application/json");
-
-            response = await httpClient.PostAsync(url, content);
 
             if (response.IsSuccessStatusCode)
             {
