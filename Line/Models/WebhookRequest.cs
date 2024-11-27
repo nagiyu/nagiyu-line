@@ -1,5 +1,7 @@
-﻿using Line.Models.WebhookEvents;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
+
+using Line.Models.WebhookEvents;
+using Line.Models.WebhookEvents.MessageObjects;
 
 namespace Line.Models
 {
@@ -16,6 +18,6 @@ namespace Line.Models
         /// <summary>
         /// Webhookイベントオブジェクトの配列
         /// </summary>
-        public List<T> Events { get; set; }
+        public List<MessageEvent<TextMessage>> Events { get; set; }
     }
 }
