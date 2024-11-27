@@ -29,7 +29,7 @@ namespace Line.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> SendMessage([FromBody] WebhookRequest<TextMessage> request)
+        public async Task<IActionResult> SendMessage([FromBody] WebhookRequest<MessageEvent<TextMessage>> request)
         {
             // リクエストをログに追記する
             System.IO.File.AppendAllText(outputPath, JsonConvert.SerializeObject(request) + "\n");
