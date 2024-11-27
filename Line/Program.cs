@@ -2,10 +2,16 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 
+using Line;
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();
+builder.Services.AddHttpClient();
+
+// appsettings.json から設定を読み込む
+builder.Services.Configure<LineSettings>(builder.Configuration.GetSection("LineSettings"));
 
 var app = builder.Build();
 
