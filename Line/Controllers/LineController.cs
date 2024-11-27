@@ -41,14 +41,14 @@ namespace Line.Controllers
 
             // リクエストの type が message でない場合は無視する
             var messageEvent = request.Events[0];
-            if (messageEvent.Type != WebhookEventType.Message)
+            if (messageEvent.Type != "message")
             {
                 return Ok();
             }
 
             // message の type が text でない場合は無視する
             var message = (messageEvent as MessageEvent).Message as TextMessage;
-            if (message.Type != MessageType.Text)
+            if (message.Type != "text")
             {
                 return Ok();
             }

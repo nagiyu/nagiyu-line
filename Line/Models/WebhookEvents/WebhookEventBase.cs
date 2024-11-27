@@ -62,12 +62,12 @@ namespace Line.Models.WebhookEvents
         /// <summary>
         /// イベントのタイプを表す識別子
         /// </summary>
-        public WebhookEventType Type { get; set; }
+        public string Type { get; set; }
 
         /// <summary>
         /// チャネルの状態
         /// </summary>
-        public WebhookEventMode Mode { get; set; }
+        public string Mode { get; set; }
 
         /// <summary>
         /// イベント発生時刻 (UNIXタイム・ミリ秒)
@@ -109,7 +109,7 @@ namespace Line.Models.WebhookEvents
         /// <summary>
         /// イベントの送信元情報を表す識別子
         /// </summary>
-        public SourceType Type { get; set; }
+        public string Type { get; set; }
 
         /// <summary>
         /// 送信元ユーザーのID

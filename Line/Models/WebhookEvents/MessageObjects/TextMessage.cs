@@ -113,7 +113,7 @@ namespace Line.Models.WebhookEvents.MessageObjects
         /// <summary>
         /// メンションの対象
         /// </summary>
-        public MentioneeType Type { get; set; }
+        public string Type { get; set; }
 
         /// <summary>
         /// メンションされたユーザーまたはボットのユーザーID

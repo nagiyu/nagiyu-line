@@ -66,7 +66,7 @@ namespace Line.Models.WebhookEvents.MessageObjects
         /// <summary>
         /// メッセージタイプ
         /// </summary>
-        public MessageType Type { get; set; }
+        public string Type { get; set; }
     }
 
     /// <summary>
@@ -77,7 +77,7 @@ namespace Line.Models.WebhookEvents.MessageObjects
         /// <summary>
         /// ファイルの提供元
         /// </summary>
-        public ContentProviderType Type { get; set; }
+        public string Type { get; set; }
 
         /// <summary>
         /// ファイルのURL
