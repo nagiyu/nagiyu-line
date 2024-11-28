@@ -1,7 +1,8 @@
 ﻿using System.Collections.Generic;
 
+using Newtonsoft.Json;
+
 using Line.Models.WebhookEvents;
-using Line.Models.WebhookEvents.MessageObjects;
 
 namespace Line.Models
 {

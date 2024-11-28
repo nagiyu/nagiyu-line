@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.IO;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Text;
@@ -8,11 +9,11 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
 
 using Newtonsoft.Json;
+using Newtonsoft.Json.Serialization;
 
 using Line.Models;
 using Line.Models.WebhookEvents;
 using Line.Models.WebhookEvents.MessageObjects;
-using System;
 
 namespace Line.Controllers
 {
@@ -30,84 +31,114 @@ namespace Line.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> SendMessage([FromBody] WebhookRequest<MessageEvent<MessageBase>> request)
+        public async Task<IActionResult> SendMessage()
         {
+            using var reader = new StreamReader(Request.Body);
+            var requestBody = await reader.ReadToEndAsync(); // JSON文字列ゲット✨
+
             // リクエストをログに追記する
-            System.IO.File.AppendAllText(outputPath, JsonConvert.SerializeObject(request) + "\n");
+            System.IO.File.AppendAllText(outputPath, JsonConvert.SerializeObject(requestBody) + "\n");
 
-            foreach (var evt in request.Events)
+            // Snake CaseやCamel Caseのキーを自動変換
+            var settings = new JsonSerializerSettings
             {
-                if (evt.Message is TextMessage textMessage)
+                ContractResolver = new DefaultContractResolver
                 {
-                    // リクエストをログに追記する
-                    System.IO.File.AppendAllText(outputPath, JsonConvert.SerializeObject(textMessage) + "\n");
+                    NamingStrategy = new CamelCaseNamingStrategy() // Camel Case対応（例: name, age）
                 }
-                else if (evt.Message is ImageMessage imageMessage)
+            };
+
+            var request = JsonConvert.DeserializeObject<WebhookRequest<WebhookEventBase>>(requestBody, settings);
+
+            // Event でループする
+            for (int index = 0; index < request.Events.Count; index++)
+            {
+                if (request.Events[index].Type == "message")
                 {
-                    // リクエストをログに追記する
-                    System.IO.File.AppendAllText(outputPath, JsonConvert.SerializeObject(imageMessage) + "\n");
-                }
-            }
+                    var messageEvent = JsonConvert.DeserializeObject<WebhookRequest<MessageEvent<MessageBase>>>(requestBody, settings).Events[index];
 
-            if (request?.Events == null || request.Events.Count == 0)
-            {
-                return Ok();
-            }
+                    var replyToken = messageEvent.ReplyToken;
 
-            // リクエストの type が message でない場合は無視する
-            var messageEvent = request.Events[0];
-            if (messageEvent.Type != "message")
-            {
-                return Ok();
-            }
-
-            // message の type が text でない場合は無視する
-            var message = messageEvent.Message;
-            if (message.Type != "text")
-            {
-                return Ok();
-            }
-
-            // replyToken を取得する
-            var replyToken = messageEvent.ReplyToken;
-
-            var url = "https://api.line.me/v2/bot/message/reply";
-
-            httpClient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
-            httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", channelAccessToken);
-
-            var payload = new ReplyRequest
-            {
-                ReplyToken = replyToken,
-                Messages = new List<ReplyMessage>
-                {
-                    new ReplyMessage
+                    if (messageEvent.Message.Type == "text")
                     {
-                        Type = "text",
-                        Text = (message as TextMessage).Text
+                        var textMessage = JsonConvert.DeserializeObject<WebhookRequest<MessageEvent<TextMessage>>>(requestBody, settings).Events[index].Message;
+
+                        httpClient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+                        httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", channelAccessToken);
+
+                        var payload = new ReplyRequest
+                        {
+                            ReplyToken = replyToken,
+                            Messages = new List<ReplyMessage>
+                            {
+                                new ReplyMessage
+                                {
+                                    Type = "text",
+                                    Text = textMessage.Text
+                                }
+                            }
+                        };
+
+                        // payload の JSON のキーをキャメルケースにする
+                        var json = JsonConvert.SerializeObject(payload, new JsonSerializerSettings
+                        {
+                            ContractResolver = new CamelCasePropertyNamesContractResolver()
+                        });
+                        var content = new StringContent(json, Encoding.UTF8, "application/json");
+
+#if !DEBUG
+                        var url = "https://api.line.me/v2/bot/message/reply";
+                        var response = await httpClient.PostAsync(url, content);
+
+                        if (!response.IsSuccessStatusCode)
+                        {
+                            var errorMessage = await response.Content.ReadAsStringAsync();
+                            System.IO.File.AppendAllText(outputPath, $"Error: {errorMessage}\n");
+                        }
+#endif
+                    }
+                    else if (messageEvent.Message.Type == "image")
+                    {
+                        var imageMessage = JsonConvert.DeserializeObject<WebhookRequest<MessageEvent<ImageMessage>>>(requestBody, settings).Events[index].Message;
+
+                        httpClient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+                        httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", channelAccessToken);
+
+                        var payload = new ReplyRequest
+                        {
+                            ReplyToken = replyToken,
+                            Messages = new List<ReplyMessage>
+                            {
+                                new ReplyMessage
+                                {
+                                    Type = "text",
+                                    Text = "画像は受け付けてないお"
+                                }
+                            }
+                        };
+
+                        // payload の JSON のキーをキャメルケースにする
+                        var json = JsonConvert.SerializeObject(payload, new JsonSerializerSettings
+                        {
+                            ContractResolver = new CamelCasePropertyNamesContractResolver()
+                        });
+                        var content = new StringContent(json, Encoding.UTF8, "application/json");
+
+#if !DEBUG
+                        var url = "https://api.line.me/v2/bot/message/reply";
+                        var response = await httpClient.PostAsync(url, content);
+
+                        if (!response.IsSuccessStatusCode)
+                        {
+                            var errorMessage = await response.Content.ReadAsStringAsync();
+                            System.IO.File.AppendAllText(outputPath, $"Error: {errorMessage}\n");
+                        }
+#endif
                     }
                 }
             };
 
-            // payload の JSON のキーをキャメルケースにする
-            var json = JsonConvert.SerializeObject(payload, new JsonSerializerSettings
-            {
-                ContractResolver = new Newtonsoft.Json.Serialization.CamelCasePropertyNamesContractResolver()
-            });
-            var content = new StringContent(json, Encoding.UTF8, "application/json");
-
-            var response = await httpClient.PostAsync(url, content);
-
-            if (response.IsSuccessStatusCode)
-            {
-                return Ok("メッセージが送信されました。");
-            }
-            else
-            {
-                var errorMessage = await response.Content.ReadAsStringAsync();
-                System.IO.File.AppendAllText(outputPath, $"Error: {errorMessage}\n");
-                return BadRequest($"エラーが発生しました: {errorMessage}");
-            }
+            return Ok();
         }
     }
 }
