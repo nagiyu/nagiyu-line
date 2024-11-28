@@ -32,6 +32,9 @@ namespace Line.Controllers
         [HttpPost]
         public async Task<IActionResult> SendMessage([FromBody] WebhookRequest<MessageEvent<MessageBase>> request)
         {
+            // リクエストをログに追記する
+            System.IO.File.AppendAllText(outputPath, JsonConvert.SerializeObject(request) + "\n");
+
             foreach (var evt in request.Events)
             {
                 if (evt.Message is TextMessage textMessage)
@@ -43,11 +46,6 @@ namespace Line.Controllers
                 {
                     // リクエストをログに追記する
                     System.IO.File.AppendAllText(outputPath, JsonConvert.SerializeObject(imageMessage) + "\n");
-                }
-                else
-                {
-                    // リクエストをログに追記する
-                    System.IO.File.AppendAllText(outputPath, JsonConvert.SerializeObject(request) + "\n");
                 }
             }
 

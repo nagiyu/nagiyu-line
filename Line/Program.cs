@@ -7,7 +7,11 @@ using Line;
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
-builder.Services.AddControllersWithViews();
+builder.Services.AddControllersWithViews()
+    .AddNewtonsoftJson(options =>
+    {
+        options.SerializerSettings.Converters.Add(new MessageConverter());
+    });
 builder.Services.AddHttpClient();
 
 // appsettings.json から設定を読み込む
