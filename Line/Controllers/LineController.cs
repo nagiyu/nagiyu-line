@@ -86,7 +86,7 @@ namespace Line.Controllers
                     new ReplyMessage
                     {
                         Type = "text",
-                        Text = message.Text
+                        Text = (message as TextMessage).Text
                     }
                 }
             };
