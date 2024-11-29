@@ -1,6 +1,4 @@
-﻿using System.ComponentModel.DataAnnotations;
-
-namespace Line.Models.WebhookEvents.MessageObjects
+﻿namespace LineBotProcessor.Models.Webhook.WebhookEvents.MessageObjects
 {
     /// <summary>
     /// 送信元から送られた動画を含むメッセージオブジェクト

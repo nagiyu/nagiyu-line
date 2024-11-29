@@ -3,7 +3,11 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.9.34723.18
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Line", "Line\Line.csproj", "{FCEEF1FB-4194-46C2-BB10-7BCDE6558E7C}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Line", "Line\Line.csproj", "{FCEEF1FB-4194-46C2-BB10-7BCDE6558E7C}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LineBotProcessor", "LineBotProcessor\LineBotProcessor.csproj", "{BAA8A8B9-F27B-46B3-950F-347D38896C38}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Common", "Common\Common.csproj", "{C1CEF5CB-7B64-41C2-888C-180431006FD6}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -15,6 +19,14 @@ Global
 		{FCEEF1FB-4194-46C2-BB10-7BCDE6558E7C}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{FCEEF1FB-4194-46C2-BB10-7BCDE6558E7C}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{FCEEF1FB-4194-46C2-BB10-7BCDE6558E7C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{BAA8A8B9-F27B-46B3-950F-347D38896C38}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BAA8A8B9-F27B-46B3-950F-347D38896C38}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BAA8A8B9-F27B-46B3-950F-347D38896C38}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{BAA8A8B9-F27B-46B3-950F-347D38896C38}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C1CEF5CB-7B64-41C2-888C-180431006FD6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C1CEF5CB-7B64-41C2-888C-180431006FD6}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C1CEF5CB-7B64-41C2-888C-180431006FD6}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C1CEF5CB-7B64-41C2-888C-180431006FD6}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -2,16 +2,22 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 
-using Line;
+using Common.Utilities;
+
+using LineBotProcessor.Interfaces;
+using LineBotProcessor.Services;
 
 var builder = WebApplication.CreateBuilder(args);
+
+// サービス登録
+builder.Services.AddTransient<IMessageProcessor, MessageProcessor>();
+builder.Services.AddTransient<IApiHandler, ApiHandler>();
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();
 builder.Services.AddHttpClient();
 
-// appsettings.json から設定を読み込む
-builder.Services.Configure<LineSettings>(builder.Configuration.GetSection("LineSettings"));
+AppSettings.Initialize(builder.Configuration);
 
 var app = builder.Build();
 

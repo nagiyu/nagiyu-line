@@ -1,6 +1,4 @@
-﻿using System.ComponentModel.DataAnnotations;
-
-namespace Line.Models.WebhookEvents.MessageObjects
+﻿namespace LineBotProcessor.Models.Webhook.WebhookEvents.MessageObjects
 {
     public class LocationMessage : MessageBase
     {

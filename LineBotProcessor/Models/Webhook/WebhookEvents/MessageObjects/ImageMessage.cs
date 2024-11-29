@@ -1,7 +1,4 @@
-﻿using Newtonsoft.Json.Converters;
-using System.ComponentModel.DataAnnotations;
-
-namespace Line.Models.WebhookEvents.MessageObjects
+﻿namespace LineBotProcessor.Models.Webhook.WebhookEvents.MessageObjects
 {
     /// <summary>
     /// 送信元から送られた画像を含むメッセージオブジェクト

@@ -1,9 +1,8 @@
 ﻿using System.Collections.Generic;
 
-using Line.Models.WebhookEvents;
-using Line.Models.WebhookEvents.MessageObjects;
+using LineBotProcessor.Models.Webhook.WebhookEvents;
 
-namespace Line.Models
+namespace LineBotProcessor.Models.Webhook
 {
     /// <summary>
     /// Webhookイベントのリクエストボディ

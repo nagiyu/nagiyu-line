@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace Line.Models.WebhookEvents.MessageObjects
+namespace LineBotProcessor.Models.Webhook.WebhookEvents.MessageObjects
 {
     /// <summary>
     /// スタンプのリソースタイプ

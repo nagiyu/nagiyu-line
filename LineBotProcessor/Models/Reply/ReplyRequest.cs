@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace Line
+namespace LineBotProcessor.Models.Reply
 {
     public class ReplyRequest
     {

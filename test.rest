@@ -1,0 +1,185 @@
+@host = http://localhost:5165
+
+###
+POST {{host}}/Line/SendMessage
+Content-Type: application/json
+
+{
+    "destination": "xxxxxxxxxx",
+    "events": []
+}
+
+### Mix
+POST {{host}}/Line/SendMessage
+Content-Type: application/json
+
+{
+    "destination": "xxxxxxxxxx",
+    "events": [
+        {
+            "type": "message",
+            "message": {
+                "type": "text",
+                "id": "14353798921116",
+                "text": "Hello, world"
+            },
+            "timestamp": 1625665242211,
+            "source": {
+                "type": "user",
+                "userId": "U80696558e1aa831..."
+            },
+            "replyToken": "757913772c4646b784d4b7ce46d12671",
+            "mode": "active",
+            "webhookEventId": "01FZ74A0TDDPYRVKNK77XKC3ZR",
+            "deliveryContext": {
+                "isRedelivery": false
+            }
+        },
+        {
+            "type": "message",
+            "message": {
+                "type": "image",
+                "id": "354718705033693859",
+                "quoteToken": "q3Plxr4AgKd...",
+                "contentProvider": {
+                    "type": "line"
+                },
+                "imageSet": {
+                    "id": "E005D41A7288F41B65593ED38FF6E9834B046AB36A37921A56BC236F13A91855",
+                    "index": 1,
+                    "total": 2
+                }
+            },
+            "timestamp": 1627356924513,
+            "source": {
+                "type": "user",
+                "userId": "U4af4980629..."
+            },
+            "webhookEventId": "01FZ74A0TDDPYRVKNK77XKC3ZR",
+            "deliveryContext": {
+                "isRedelivery": false
+            },
+            "replyToken": "7840b71058e24a5d91f9b5726c7512c9",
+            "mode": "active"
+        },
+        {
+            "type": "follow",
+            "timestamp": 1625665242214,
+            "source": {
+                "type": "user",
+                "userId": "Ufc729a925b3abef..."
+            },
+            "replyToken": "bb173f4d9cf64aed9d408ab4e36339ad",
+            "mode": "active",
+            "webhookEventId": "01FZ74ASS536FW97EX38NKCZQK",
+            "deliveryContext": {
+                "isRedelivery": false
+            }
+        },
+        {
+            "type": "unfollow",
+            "timestamp": 1625665242215,
+            "source": {
+                "type": "user",
+                "userId": "Ubbd4f124aee5113..."
+            },
+            "mode": "active",
+            "webhookEventId": "01FZ74B5Y0F4TNKA5SCAVKPEDM",
+            "deliveryContext": {
+                "isRedelivery": false
+            }
+        }
+    ]
+}
+
+### テキスト
+POST {{host}}/Line/SendMessage
+Content-Type: application/json
+
+{
+    "destination": "xxxxxxxxxx",
+    "events": [
+        {
+            "replyToken": "nHuyWiB7yP5Zw52FIkcQobQuGDXCTA",
+            "type": "message",
+            "mode": "active",
+            "timestamp": 1462629479859,
+            "source": {
+                "type": "group",
+                "groupId": "Ca56f94637c...",
+                "userId": "U4af4980629..."
+            },
+            "webhookEventId": "01FZ74A0TDDPYRVKNK77XKC3ZR",
+            "deliveryContext": {
+                "isRedelivery": false
+            },
+            "message": {
+                "id": "444573844083572737",
+                "type": "text",
+                "quoteToken": "q3Plxr4AgKd...",
+                "text": "@All @example Good Morning!! (love)",
+                "emojis": [
+                    {
+                        "index": 29,
+                        "length": 6,
+                        "productId": "5ac1bfd5040ab15980c9b435",
+                        "emojiId": "001"
+                    }
+                ],
+                "mention": {
+                    "mentionees": [
+                        {
+                            "index": 0,
+                            "length": 4,
+                            "type": "all"
+                        },
+                        {
+                            "index": 5,
+                            "length": 8,
+                            "userId": "U49585cd0d5...",
+                            "type": "user",
+                            "isSelf": false
+                        }
+                    ]
+                }
+            }
+        }
+    ]
+}
+
+### 画像
+POST {{host}}/Line/SendMessage
+Content-Type: application/json
+
+{
+    "destination": "xxxxxxxxxx",
+    "events": [
+        {
+            "type": "message",
+            "message": {
+                "type": "image",
+                "id": "354718705033693859",
+                "quoteToken": "q3Plxr4AgKd...",
+                "contentProvider": {
+                    "type": "line"
+                },
+                "imageSet": {
+                    "id": "E005D41A7288F41B65593ED38FF6E9834B046AB36A37921A56BC236F13A91855",
+                    "index": 1,
+                    "total": 2
+                }
+            },
+            "timestamp": 1627356924513,
+            "source": {
+                "type": "user",
+                "userId": "U4af4980629..."
+            },
+            "webhookEventId": "01FZ74A0TDDPYRVKNK77XKC3ZR",
+            "deliveryContext": {
+                "isRedelivery": false
+            },
+            "replyToken": "7840b71058e24a5d91f9b5726c7512c9",
+            "mode": "active"
+        }
+    ]
+}
