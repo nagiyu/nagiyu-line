@@ -11,6 +11,18 @@ services:
     volumes:
       - ./line/bin:/app
 
+  postgres:
+    image: postgres:15.10
+    container_name: "${PROJECT_NAME}_postgres"
+    ports:
+      - "${DB_PORT}:5432"
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+      - POSTGRES_DB=line_db
+    volumes:
+      - ./../resources/postgres:/var/lib/postgresql/data
+
   pgadmin:
     image: dpage/pgadmin4:8.13.0
     container_name: "${PROJECT_NAME}_pgadmin"
@@ -19,3 +31,5 @@ services:
     environment:
       - PGADMIN_DEFAULT_EMAIL=${PGADMIN_DEFAULT_EMAIL}
       - PGADMIN_DEFAULT_PASSWORD=${PGADMIN_DEFAULT_PASSWORD}
+    volumes:
+      - ./pgadmin/servers.json:/pgadmin4/servers.json
