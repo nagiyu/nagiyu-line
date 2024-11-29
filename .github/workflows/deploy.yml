@@ -1,0 +1,100 @@
+name: deploy
+
+on:
+  push:
+    branches:
+      - master
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v2
+
+    - name: Setup .NET Core
+      uses: actions/setup-dotnet@v1
+      with:
+        dotnet-version: 8.0.x
+
+    - name: Publish with dotnet
+      run: dotnet publish --configuration Release Line/Line.csproj
+
+    - name: Copy files
+      run: cp -r Line/bin/Release/net8.0/publish containers/line/bin
+
+    - name: Add .env
+      run: echo "${{ secrets.PRODUCTION_ENV }}" > containers/.env
+
+    - name: Update appsettings.json
+      run: echo '${{ secrets.PRODUCTION_APPSETTINGS }}' > containers/line/bin/appsettings.json
+
+    - name: Remove Nginx Settings in target path
+      uses: appleboy/ssh-action@master
+      with:
+        host: ${{ secrets.SSH_HOST }}
+        username: ${{ secrets.SSH_USERNAME }}
+        key: ${{ secrets.SSH_PRIVATE_KEY }}
+        port: ${{ secrets.SSH_PORT }}
+        script: |
+          sudo rm -rf /etc/nginx/sites-enabled/line
+          sudo rm -rf /etc/nginx/sites-available/line
+          sudo rm -rf ${{ secrets.PRODUCTION_TARGET_PATH }}/nginx
+
+    - name: Upload Nginx Settings to server
+      uses: appleboy/scp-action@master
+      with:
+        host: ${{ secrets.SSH_HOST }}
+        username: ${{ secrets.SSH_USERNAME }}
+        key: ${{ secrets.SSH_PRIVATE_KEY }}
+        port: ${{ secrets.SSH_PORT }}
+        source: nginx/*
+        target: ${{ secrets.PRODUCTION_TARGET_PATH }}
+
+    - name: Replace nginx configuration and Reload nginx
+      uses: appleboy/ssh-action@master
+      with:
+        host: ${{ secrets.SSH_HOST }}
+        username: ${{ secrets.SSH_USERNAME }}
+        key: ${{ secrets.SSH_PRIVATE_KEY }}
+        port: ${{ secrets.SSH_PORT }}
+        script: |
+          sudo cp ${{ secrets.PRODUCTION_TARGET_PATH }}/nginx/line /etc/nginx/sites-available/
+          sudo ln -s /etc/nginx/sites-available/line /etc/nginx/sites-enabled/
+          sudo systemctl restart nginx
+
+    - name: Remove all files in target path
+      uses: appleboy/ssh-action@master
+      with:
+        host: ${{ secrets.SSH_HOST }}
+        username: ${{ secrets.SSH_USERNAME }}
+        key: ${{ secrets.SSH_PRIVATE_KEY }}
+        port: ${{ secrets.SSH_PORT }}
+        script: |
+          cd ${{ secrets.PRODUCTION_TARGET_PATH }}/containers
+          docker compose -f docker-compose.yml -p line down
+          docker volume prune -f && docker image prune -f && docker builder prune -f
+          sudo rm -Rf *
+
+    - name: Upload artifact to server
+      uses: appleboy/scp-action@master
+      with:
+        host: ${{ secrets.SSH_HOST }}
+        username: ${{ secrets.SSH_USERNAME }}
+        key: ${{ secrets.SSH_PRIVATE_KEY }}
+        port: ${{ secrets.SSH_PORT }}
+        source: containers/*
+        target: ${{ secrets.PRODUCTION_TARGET_PATH }}
+
+    - name: Recreate Line
+      uses: appleboy/ssh-action@master
+      with:
+        host: ${{ secrets.SSH_HOST }}
+        username: ${{ secrets.SSH_USERNAME }}
+        key: ${{ secrets.SSH_PRIVATE_KEY }}
+        port: ${{ secrets.SSH_PORT }}
+        script: |
+          cd ${{ secrets.PRODUCTION_TARGET_PATH }}/containers
+          docker compose -f docker-compose.yml build --no-cache
+          docker compose -f docker-compose.yml -p line up -d
