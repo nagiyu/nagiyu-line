@@ -27,12 +27,6 @@ namespace OpenAIConnect.Services
 
         public async Task<string> SendRequestAsync(List<RequestMessage> prompts)
         {
-            prompts.Insert(0, new RequestMessage
-            {
-                Role = "system",
-                Content = "You are a helpful assistant."
-            });
-
             var requestBody = new OpenAIRequest
             {
                 Model = "gpt-4o-mini",

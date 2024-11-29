@@ -36,5 +36,24 @@ namespace Line.Controllers
 
             return Ok();
         }
+
+        [HttpPost]
+        public async Task<IActionResult> SendGyaruMessage()
+        {
+            using var reader = new StreamReader(Request.Body);
+            var requestBody = await reader.ReadToEndAsync();
+
+            try
+            {
+                await messageProcessor.ProcessGyaruMessageAsync(requestBody);
+            }
+            catch (System.Exception ex)
+            {
+                LogHelper.WriteLog(ex.Message);
+                return StatusCode(500);
+            }
+
+            return Ok();
+        }
     }
 }
