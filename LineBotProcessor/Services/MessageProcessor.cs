@@ -12,6 +12,8 @@ using LineBotProcessor.Models.Reply;
 using LineBotProcessor.Models.Webhook;
 using LineBotProcessor.Models.Webhook.WebhookEvents.MessageObjects;
 
+using OpenAIConnect.Interfaces;
+
 namespace LineBotProcessor.Services
 {
     /// <summary>
@@ -21,9 +23,12 @@ namespace LineBotProcessor.Services
     {
         private readonly IApiHandler apiHandler;
 
-        public MessageProcessor(IApiHandler apiHandler)
+        private readonly IOpenAIClient openAIClient;
+
+        public MessageProcessor(IApiHandler apiHandler, IOpenAIClient openAIClient)
         {
             this.apiHandler = apiHandler;
+            this.openAIClient = openAIClient;
         }
 
         public async Task ProcessMessageAsync(string requestBody)
@@ -43,6 +48,8 @@ namespace LineBotProcessor.Services
                     {
                         var textMessage = JsonHelper.Deserialize<WebhookRequest<MessageEvent<TextMessage>>>(requestBody).Events[index].Message;
 
+                        var response = await openAIClient.SendRequestAsync(textMessage.Text);
+
                         var payload = new ReplyRequest
                         {
                             ReplyToken = replyToken,
@@ -51,7 +58,7 @@ namespace LineBotProcessor.Services
                                 new ReplyMessage
                                 {
                                     Type = "text",
-                                    Text = textMessage.Text
+                                    Text = response
                                 }
                             }
                         };
