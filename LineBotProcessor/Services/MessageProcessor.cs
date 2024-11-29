@@ -6,6 +6,9 @@ using System.Threading.Tasks;
 
 using Common.Utilities;
 
+using DynamoDBAccessor.Interfaces;
+using DynamoDBAccessor.Models;
+
 using LineBotProcessor.Interfaces;
 using LineBotProcessor.Models.Webhook.WebhookEvents;
 using LineBotProcessor.Models.Reply;
@@ -22,12 +25,13 @@ namespace LineBotProcessor.Services
     public class MessageProcessor : IMessageProcessor
     {
         private readonly IApiHandler apiHandler;
-
+        private readonly IDynamoDbService dynamoDbService;
         private readonly IOpenAIClient openAIClient;
 
-        public MessageProcessor(IApiHandler apiHandler, IOpenAIClient openAIClient)
+        public MessageProcessor(IApiHandler apiHandler, IDynamoDbService dynamoDbService, IOpenAIClient openAIClient)
         {
             this.apiHandler = apiHandler;
+            this.dynamoDbService = dynamoDbService;
             this.openAIClient = openAIClient;
         }
 
@@ -38,6 +42,9 @@ namespace LineBotProcessor.Services
             // Event でループする
             for (int index = 0; index < request.Events.Count; index++)
             {
+                var source = request.Events[index].Source;
+                var eventType = request.Events[index].Type;
+
                 if (request.Events[index].Type == "message")
                 {
                     var messageEvent = JsonHelper.Deserialize<WebhookRequest<MessageEvent<MessageBase>>>(requestBody).Events[index];
@@ -62,6 +69,19 @@ namespace LineBotProcessor.Services
                                 }
                             }
                         };
+
+                        await dynamoDbService.AddLineMessageAsync(new LineMessage
+                        {
+                            Id = Guid.NewGuid(),
+                            UserId = source.UserId,
+                            GroupId = source.GroupId,
+                            RoomId = source.RoomId,
+                            EventTimestamp = DateTimeOffset.UtcNow.ToUnixTimeSeconds(),
+                            EventType = eventType,
+                            MessageId = textMessage.Id,
+                            MessageText = textMessage.Text,
+                            ReplyText = response
+                        });
 
                         await apiHandler.SendReplyAsync(payload);
                     }
