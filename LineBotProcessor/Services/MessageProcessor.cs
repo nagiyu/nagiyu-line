@@ -16,6 +16,7 @@ using LineBotProcessor.Models.Webhook;
 using LineBotProcessor.Models.Webhook.WebhookEvents.MessageObjects;
 
 using OpenAIConnect.Interfaces;
+using OpenAIConnect.Models.Request;
 
 namespace LineBotProcessor.Services
 {
@@ -55,20 +56,34 @@ namespace LineBotProcessor.Services
                     {
                         var textMessage = JsonHelper.Deserialize<WebhookRequest<MessageEvent<TextMessage>>>(requestBody).Events[index].Message;
 
-                        var response = await openAIClient.SendRequestAsync(textMessage.Text);
+                        var pastMessages = await dynamoDbService.GetLineMessageByUserIDAsync(source.UserId);
 
-                        var payload = new ReplyRequest
+                        var prompts = new List<RequestMessage> { };
+
+                        foreach (var pastMessage in pastMessages)
                         {
-                            ReplyToken = replyToken,
-                            Messages = new List<ReplyMessage>
+                            prompts.Add(new RequestMessage
                             {
-                                new ReplyMessage
-                                {
-                                    Type = "text",
-                                    Text = response
-                                }
-                            }
-                        };
+                                Role = "user",
+                                Content = pastMessage.MessageText
+                            });
+
+                            prompts.Add(new RequestMessage
+                            {
+                                Role = "assistant",
+                                Content = pastMessage.ReplyText
+                            });
+                        }
+
+                        prompts.Add(new RequestMessage
+                        {
+                            Role = "user",
+                            Content = textMessage.Text
+                        });
+
+                        var response = textMessage.Text != "リセット" 
+                            ? await openAIClient.SendRequestAsync(prompts) 
+                            : string.Empty;
 
                         await dynamoDbService.AddLineMessageAsync(new LineMessage
                         {
@@ -82,6 +97,19 @@ namespace LineBotProcessor.Services
                             MessageText = textMessage.Text,
                             ReplyText = response
                         });
+
+                        var payload = new ReplyRequest
+                        {
+                            ReplyToken = replyToken,
+                            Messages = new List<ReplyMessage>
+                            {
+                                new ReplyMessage
+                                {
+                                    Type = "text",
+                                    Text = response
+                                }
+                            }
+                        };
 
                         await apiHandler.SendReplyAsync(payload);
                     }

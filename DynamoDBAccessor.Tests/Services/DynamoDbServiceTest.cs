@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -53,6 +54,24 @@ namespace DynamoDBAccessor.Tests.Services
 
             // Assert
             Assert.IsTrue(true);
+        }
+
+        [TestMethod]
+        public async Task GetLineMessageByUserIDAsync()
+        {
+            // Arrange
+            var userId = "test-user-id";
+
+            // Act
+            var result = await dynamoDbService.GetLineMessageByUserIDAsync(userId);
+
+            foreach (var item in result)
+            {
+                Debug.WriteLine($"{item.UserId}, {item.EventTimestamp}, {item.MessageText}, {item.ReplyText}");
+            }
+
+            // Assert
+            Assert.IsNotNull(result);
         }
     }
 }
