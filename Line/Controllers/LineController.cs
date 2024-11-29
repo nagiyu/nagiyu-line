@@ -24,9 +24,6 @@ namespace Line.Controllers
             using var reader = new StreamReader(Request.Body);
             var requestBody = await reader.ReadToEndAsync();
 
-            // リクエストをログに追記する
-            LogHelper.WriteLog(requestBody);
-
             try
             {
                 await messageProcessor.ProcessMessageAsync(requestBody);

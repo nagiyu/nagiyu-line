@@ -83,7 +83,7 @@ namespace LineBotProcessor.Services
 
                         var response = textMessage.Text != "リセット" 
                             ? await openAIClient.SendRequestAsync(prompts) 
-                            : string.Empty;
+                            : "Reset completed!!!";
 
                         await dynamoDbService.AddLineMessageAsync(new LineMessage
                         {
