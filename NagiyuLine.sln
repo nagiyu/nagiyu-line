@@ -9,9 +9,13 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LineBotProcessor", "LineBot
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Common", "Common\Common.csproj", "{C1CEF5CB-7B64-41C2-888C-180431006FD6}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OpenAIConnect", "OpenAI\OpenAIConnect.csproj", "{6B4675CD-CD4A-47E8-B8F7-3C1C33E6826E}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "OpenAIConnect", "OpenAI\OpenAIConnect.csproj", "{6B4675CD-CD4A-47E8-B8F7-3C1C33E6826E}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OpenAIConnect.Tests", "OpenAIConnect.Tests\OpenAIConnect.Tests.csproj", "{A04868B9-834A-4DD8-B8D9-E6CBA7D2C5D9}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "OpenAIConnect.Tests", "OpenAIConnect.Tests\OpenAIConnect.Tests.csproj", "{A04868B9-834A-4DD8-B8D9-E6CBA7D2C5D9}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DynamoDBAccessor", "DynamoDBAccessor\DynamoDBAccessor.csproj", "{BA7BC151-26E3-450A-9008-2211E9C5DF2A}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DynamoDBAccessor.Tests", "DynamoDBAccessor.Tests\DynamoDBAccessor.Tests.csproj", "{5F90CC86-3F24-4B46-BBF8-D7F3980BF1BF}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -39,6 +43,14 @@ Global
 		{A04868B9-834A-4DD8-B8D9-E6CBA7D2C5D9}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{A04868B9-834A-4DD8-B8D9-E6CBA7D2C5D9}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{A04868B9-834A-4DD8-B8D9-E6CBA7D2C5D9}.Release|Any CPU.Build.0 = Release|Any CPU
+		{BA7BC151-26E3-450A-9008-2211E9C5DF2A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BA7BC151-26E3-450A-9008-2211E9C5DF2A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BA7BC151-26E3-450A-9008-2211E9C5DF2A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{BA7BC151-26E3-450A-9008-2211E9C5DF2A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5F90CC86-3F24-4B46-BBF8-D7F3980BF1BF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5F90CC86-3F24-4B46-BBF8-D7F3980BF1BF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5F90CC86-3F24-4B46-BBF8-D7F3980BF1BF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5F90CC86-3F24-4B46-BBF8-D7F3980BF1BF}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
