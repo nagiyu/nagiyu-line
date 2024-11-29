@@ -25,24 +25,18 @@ namespace OpenAIConnect.Services
             this.httpClient = httpClient;
         }
 
-        public async Task<string> SendRequestAsync(string prompt)
+        public async Task<string> SendRequestAsync(List<RequestMessage> prompts)
         {
+            prompts.Insert(0, new RequestMessage
+            {
+                Role = "system",
+                Content = "You are a helpful assistant."
+            });
+
             var requestBody = new OpenAIRequest
             {
                 Model = "gpt-4o-mini",
-                Messages = new List<RequestMessage>
-                {
-                    new RequestMessage
-                    {
-                        Role = "system",
-                        Content = "You are a helpful assistant."
-                    },
-                    new RequestMessage
-                    {
-                        Role = "user",
-                        Content = prompt
-                    }
-                }
+                Messages = prompts
             };
 
             var apiKey = AppSettings.GetSetting("OpenAI:APIKey");

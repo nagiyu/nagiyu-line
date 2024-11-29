@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
@@ -10,6 +11,7 @@ using Common.Utilities;
 using Microsoft.Extensions.Configuration;
 
 using OpenAIConnect.Interfaces;
+using OpenAIConnect.Models.Request;
 using OpenAIConnect.Services;
 
 namespace OpenAIConnect.Tests.Services
@@ -37,10 +39,17 @@ namespace OpenAIConnect.Tests.Services
         public async Task SendRequestAsync()
         {
             // Arrange
-            var prompt = "What is the meaning of life?";
+            var prompts = new List<RequestMessage>
+            {
+                new RequestMessage
+                {
+                    Role = "user",
+                    Content = "What is the meaning of life?"
+                }
+            };
 
             // Act
-            var response = await openAIClient.SendRequestAsync(prompt);
+            var response = await openAIClient.SendRequestAsync(prompts);
 
             Debug.WriteLine(response);
 

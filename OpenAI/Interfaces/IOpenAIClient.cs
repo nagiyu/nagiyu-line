@@ -4,10 +4,12 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
+using OpenAIConnect.Models.Request;
+
 namespace OpenAIConnect.Interfaces
 {
     public interface IOpenAIClient
     {
-        Task<string> SendRequestAsync(string prompt);
+        Task<string> SendRequestAsync(List<RequestMessage> prompts);
     }
 }
