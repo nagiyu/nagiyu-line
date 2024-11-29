@@ -223,9 +223,9 @@ namespace LineBotProcessor.Services
                             }
                         };
 
-                        await apiHandler.SendReplyAsync(payload);
+                        await apiHandler.SendGyaruReplyAsync(payload);
                     }
-                    else if (messageEvent.Message.Type == "image")
+                    else
                     {
                         var payload = new ReplyRequest
                         {
@@ -235,12 +235,12 @@ namespace LineBotProcessor.Services
                                 new ReplyMessage
                                 {
                                     Type = "text",
-                                    Text = "画像は受け付けてないお"
+                                    Text = "テキスト以外は受け付けてないんだ。ごめんね！"
                                 }
                             }
                         };
 
-                        await apiHandler.SendReplyAsync(payload);
+                        await apiHandler.SendGyaruReplyAsync(payload);
                     }
                 }
             };
