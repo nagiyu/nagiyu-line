@@ -4,6 +4,9 @@ using Microsoft.Extensions.Hosting;
 
 using Common.Utilities;
 
+using DynamoDBAccessor.Interfaces;
+using DynamoDBAccessor.Services;
+
 using LineBotProcessor.Interfaces;
 using LineBotProcessor.Services;
 
@@ -16,6 +19,7 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddTransient<IMessageProcessor, MessageProcessor>();
 builder.Services.AddTransient<IApiHandler, ApiHandler>();
 builder.Services.AddTransient<IOpenAIClient, OpenAIClient>();
+builder.Services.AddTransient<IDynamoDbService, DynamoDbService>();
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();

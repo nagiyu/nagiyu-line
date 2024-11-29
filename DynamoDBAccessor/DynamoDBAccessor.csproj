@@ -7,9 +7,11 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="AWSSDK.DynamoDBv2" Version="3.7.403.8" />
+  </ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Include="..\Common\Common.csproj" />
-    <ProjectReference Include="..\DynamoDBAccessor\DynamoDBAccessor.csproj" />
-    <ProjectReference Include="..\OpenAI\OpenAIConnect.csproj" />
   </ItemGroup>
 
 </Project>
