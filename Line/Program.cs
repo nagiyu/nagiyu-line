@@ -7,11 +7,15 @@ using Common.Utilities;
 using LineBotProcessor.Interfaces;
 using LineBotProcessor.Services;
 
+using OpenAIConnect.Services;
+using OpenAIConnect.Interfaces;
+
 var builder = WebApplication.CreateBuilder(args);
 
 // サービス登録
 builder.Services.AddTransient<IMessageProcessor, MessageProcessor>();
 builder.Services.AddTransient<IApiHandler, ApiHandler>();
+builder.Services.AddTransient<IOpenAIClient, OpenAIClient>();
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();
