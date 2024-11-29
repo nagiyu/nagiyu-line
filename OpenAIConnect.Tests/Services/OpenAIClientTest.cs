@@ -43,6 +43,11 @@ namespace OpenAIConnect.Tests.Services
             {
                 new RequestMessage
                 {
+                    Role = "system",
+                    Content = "You are a helpful assistant."
+                },
+                new RequestMessage
+                {
                     Role = "user",
                     Content = "What is the meaning of life?"
                 }

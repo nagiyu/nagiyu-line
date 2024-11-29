@@ -24,12 +24,28 @@ namespace Line.Controllers
             using var reader = new StreamReader(Request.Body);
             var requestBody = await reader.ReadToEndAsync();
 
-            // リクエストをログに追記する
-            LogHelper.WriteLog(requestBody);
-
             try
             {
                 await messageProcessor.ProcessMessageAsync(requestBody);
+            }
+            catch (System.Exception ex)
+            {
+                LogHelper.WriteLog(ex.Message);
+                return StatusCode(500);
+            }
+
+            return Ok();
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> SendGyaruMessage()
+        {
+            using var reader = new StreamReader(Request.Body);
+            var requestBody = await reader.ReadToEndAsync();
+
+            try
+            {
+                await messageProcessor.ProcessGyaruMessageAsync(requestBody);
             }
             catch (System.Exception ex)
             {

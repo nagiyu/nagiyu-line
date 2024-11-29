@@ -12,5 +12,7 @@ namespace LineBotProcessor.Interfaces
     public interface IMessageProcessor
     {
         Task ProcessMessageAsync(string requestBody);
+
+        Task ProcessGyaruMessageAsync(string requestBody);
     }
 }

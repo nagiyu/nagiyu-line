@@ -14,5 +14,7 @@ namespace LineBotProcessor.Interfaces
     public interface IApiHandler
     {
         Task SendReplyAsync(ReplyRequest request);
+
+        Task SendGyaruReplyAsync(ReplyRequest request);
     }
 }

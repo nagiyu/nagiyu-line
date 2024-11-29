@@ -58,7 +58,14 @@ namespace LineBotProcessor.Services
 
                         var pastMessages = await dynamoDbService.GetLineMessageByUserIDAsync(source.UserId);
 
-                        var prompts = new List<RequestMessage> { };
+                        var prompts = new List<RequestMessage>
+                        {
+                            new RequestMessage
+                            {
+                                Role = "system",
+                                Content = AppSettings.GetSetting("SystemPrompts:Nagiyu")
+                            }
+                        };
 
                         foreach (var pastMessage in pastMessages)
                         {
@@ -83,7 +90,7 @@ namespace LineBotProcessor.Services
 
                         var response = textMessage.Text != "リセット" 
                             ? await openAIClient.SendRequestAsync(prompts) 
-                            : string.Empty;
+                            : "Reset completed!!!";
 
                         await dynamoDbService.AddLineMessageAsync(new LineMessage
                         {
@@ -129,6 +136,111 @@ namespace LineBotProcessor.Services
                         };
 
                         await apiHandler.SendReplyAsync(payload);
+                    }
+                }
+            };
+        }
+
+        public async Task ProcessGyaruMessageAsync(string requestBody)
+        {
+            var request = JsonHelper.Deserialize<WebhookRequest<WebhookEventBase>>(requestBody);
+
+            // Event でループする
+            for (int index = 0; index < request.Events.Count; index++)
+            {
+                var source = request.Events[index].Source;
+                var eventType = request.Events[index].Type;
+
+                if (request.Events[index].Type == "message")
+                {
+                    var messageEvent = JsonHelper.Deserialize<WebhookRequest<MessageEvent<MessageBase>>>(requestBody).Events[index];
+
+                    var replyToken = messageEvent.ReplyToken;
+
+                    if (messageEvent.Message.Type == "text")
+                    {
+                        var textMessage = JsonHelper.Deserialize<WebhookRequest<MessageEvent<TextMessage>>>(requestBody).Events[index].Message;
+
+                        var pastMessages = await dynamoDbService.GetLineMessageByUserIDAsync(source.UserId);
+
+                        var prompts = new List<RequestMessage> 
+                        {
+                            new RequestMessage
+                            {
+                                Role = "system",
+                                Content = AppSettings.GetSetting("SystemPrompts:Gyaru")
+                            }
+                        };
+
+                        foreach (var pastMessage in pastMessages)
+                        {
+                            prompts.Add(new RequestMessage
+                            {
+                                Role = "user",
+                                Content = pastMessage.MessageText
+                            });
+
+                            prompts.Add(new RequestMessage
+                            {
+                                Role = "assistant",
+                                Content = pastMessage.ReplyText
+                            });
+                        }
+
+                        prompts.Add(new RequestMessage
+                        {
+                            Role = "user",
+                            Content = textMessage.Text
+                        });
+
+                        var response = textMessage.Text != "リセット"
+                            ? await openAIClient.SendRequestAsync(prompts)
+                            : "Reset completed!!!";
+
+                        await dynamoDbService.AddLineMessageAsync(new LineMessage
+                        {
+                            Id = Guid.NewGuid(),
+                            UserId = source.UserId,
+                            GroupId = source.GroupId,
+                            RoomId = source.RoomId,
+                            EventTimestamp = DateTimeOffset.UtcNow.ToUnixTimeSeconds(),
+                            EventType = eventType,
+                            MessageId = textMessage.Id,
+                            MessageText = textMessage.Text,
+                            ReplyText = response
+                        });
+
+                        var payload = new ReplyRequest
+                        {
+                            ReplyToken = replyToken,
+                            Messages = new List<ReplyMessage>
+                            {
+                                new ReplyMessage
+                                {
+                                    Type = "text",
+                                    Text = response
+                                }
+                            }
+                        };
+
+                        await apiHandler.SendGyaruReplyAsync(payload);
+                    }
+                    else
+                    {
+                        var payload = new ReplyRequest
+                        {
+                            ReplyToken = replyToken,
+                            Messages = new List<ReplyMessage>
+                            {
+                                new ReplyMessage
+                                {
+                                    Type = "text",
+                                    Text = "テキスト以外は受け付けてないんだ。ごめんね！"
+                                }
+                            }
+                        };
+
+                        await apiHandler.SendGyaruReplyAsync(payload);
                     }
                 }
             };

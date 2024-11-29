@@ -27,7 +27,29 @@ namespace LineBotProcessor.Services
 
         public async Task SendReplyAsync(ReplyRequest request)
         {
-            var channelAccessToken = AppSettings.GetSetting("LineSettings:ChannelAccessToken");
+            var channelAccessToken = AppSettings.GetSetting("LineSettings:ChannelAccessToken:Nagiyu");
+
+            httpClient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+            httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", channelAccessToken);
+
+            var json = JsonHelper.Serialize(request);
+            var content = new StringContent(json, Encoding.UTF8, "application/json");
+
+            var response = await httpClient.PostAsync("https://api.line.me/v2/bot/message/reply", content);
+
+            if (!response.IsSuccessStatusCode)
+            {
+                var error = await response.Content.ReadAsStringAsync();
+
+                LogHelper.WriteLog($"Error: {error}");
+
+                throw new Exception($"LINE API Error: {error}");
+            }
+        }
+
+        public async Task SendGyaruReplyAsync(ReplyRequest request)
+        {
+            var channelAccessToken = AppSettings.GetSetting("LineSettings:ChannelAccessToken:Gyaru");
 
             httpClient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
             httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", channelAccessToken);
