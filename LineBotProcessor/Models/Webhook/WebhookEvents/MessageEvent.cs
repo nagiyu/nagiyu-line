@@ -1,9 +1,6 @@
-﻿using Line.Models.WebhookEvents.MessageObjects;
-using Newtonsoft.Json;
-using Newtonsoft.Json.Converters;
-using System.Collections.Generic;
+﻿using LineBotProcessor.Models.Webhook.WebhookEvents.MessageObjects;
 
-namespace Line.Models.WebhookEvents
+namespace LineBotProcessor.Models.Webhook.WebhookEvents
 {
     /// <summary>
     /// メッセージイベント

@@ -3,7 +3,7 @@
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 
-namespace Line.Models.WebhookEvents.MessageObjects
+namespace LineBotProcessor.Models.Webhook.WebhookEvents.MessageObjects
 {
     /// <summary>
     /// メンション対象のタイプ

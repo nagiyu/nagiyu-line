@@ -1,10 +1,8 @@
 ﻿using System.Collections.Generic;
 
-using Newtonsoft.Json;
+using LineBotProcessor.Models.Webhook.WebhookEvents;
 
-using Line.Models.WebhookEvents;
-
-namespace Line.Models
+namespace LineBotProcessor.Models.Webhook
 {
     /// <summary>
     /// Webhookイベントのリクエストボディ
