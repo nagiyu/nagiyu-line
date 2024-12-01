@@ -52,6 +52,27 @@ namespace LineBotProcessor.Services
 
                     var replyToken = messageEvent.ReplyToken;
 
+                    var messageCount = await dynamoDbService.GetTodayLineMessageCountAsync(source.UserId);
+                    if (messageCount >= int.Parse(AppSettings.GetSetting("LineSettings:MaxMessageCount:Nagiyu")))
+                    {
+                        var payload = new ReplyRequest
+                        {
+                            ReplyToken = replyToken,
+                            Messages = new List<ReplyMessage>
+                            {
+                                new ReplyMessage
+                                {
+                                    Type = "text",
+                                    Text = "今日の会話上限に達しました。また明日ご利用ください！"
+                                }
+                            }
+                        };
+
+                        await apiHandler.SendReplyAsync(payload);
+
+                        continue;
+                    }
+
                     if (messageEvent.Message.Type == "text")
                     {
                         var textMessage = JsonHelper.Deserialize<WebhookRequest<MessageEvent<TextMessage>>>(requestBody).Events[index].Message;
@@ -156,6 +177,27 @@ namespace LineBotProcessor.Services
                     var messageEvent = JsonHelper.Deserialize<WebhookRequest<MessageEvent<MessageBase>>>(requestBody).Events[index];
 
                     var replyToken = messageEvent.ReplyToken;
+
+                    var messageCount = await dynamoDbService.GetTodayLineMessageCountAsync(source.UserId);
+                    if (messageCount >= int.Parse(AppSettings.GetSetting("LineSettings:MaxMessageCount:Gyaru")))
+                    {
+                        var payload = new ReplyRequest
+                        {
+                            ReplyToken = replyToken,
+                            Messages = new List<ReplyMessage>
+                            {
+                                new ReplyMessage
+                                {
+                                    Type = "text",
+                                    Text = "今日のトークはもうMAXいっちゃったわ💦また明日話そ〜ねん💕"
+                                }
+                            }
+                        };
+
+                        await apiHandler.SendReplyAsync(payload);
+
+                        continue;
+                    }
 
                     if (messageEvent.Message.Type == "text")
                     {
