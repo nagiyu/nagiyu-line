@@ -12,6 +12,8 @@ namespace DynamoDBAccessor.Interfaces
     {
         Task<List<LineMessage>> GetLineMessageByUserIDAsync(string userId);
 
+        Task<int> GetTodayLineMessageCountAsync(string userId);
+
         Task AddLineMessageAsync(LineMessage lineMessage);
     }
 }
