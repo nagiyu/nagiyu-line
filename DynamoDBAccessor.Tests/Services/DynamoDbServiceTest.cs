@@ -57,6 +57,21 @@ namespace DynamoDBAccessor.Tests.Services
         }
 
         [TestMethod]
+        public async Task GetTodayLineMessageCountAsync()
+        {
+            // Arrange
+            var userId = "test-user-id";
+
+            // Act
+            var result = await dynamoDbService.GetTodayLineMessageCountAsync(userId);
+
+            Debug.WriteLine(result);
+
+            // Assert
+            Assert.IsNotNull(result);
+        }
+
+        [TestMethod]
         public async Task GetLineMessageByUserIDAsync()
         {
             // Arrange
