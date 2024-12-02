@@ -194,7 +194,7 @@ namespace LineBotProcessor.Services
                             }
                         };
 
-                        await apiHandler.SendReplyAsync(payload);
+                        await apiHandler.SendGyaruReplyAsync(payload);
 
                         continue;
                     }
