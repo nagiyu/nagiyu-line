@@ -35,14 +35,17 @@ namespace DynamoDBAccessor.Services
 
         public async Task<List<LineMessage>> GetLineMessageByUserIDAsync(string userId)
         {
+            var oneHourAgo = DateTimeOffset.UtcNow.AddHours(-1).ToUnixTimeSeconds(); // 1時間前のUNIXタイム取得
+
             var queryRequest = new QueryRequest
             {
                 TableName = "LineMessages", // テーブル名
-                IndexName = "UserId-EventTimestamp-index",   // GSIの名前
-                KeyConditionExpression = "UserId = :userId",
+                IndexName = "UserId-EventTimestamp-index", // GSIの名前
+                KeyConditionExpression = "UserId = :userId AND EventTimestamp >= :oneHourAgo",
                 ExpressionAttributeValues = new Dictionary<string, AttributeValue>
                 {
-                    { ":userId", new AttributeValue { S = userId } }
+                    { ":userId", new AttributeValue { S = userId } },
+                    { ":oneHourAgo", new AttributeValue { N = oneHourAgo.ToString() } }
                 },
                 ScanIndexForward = false
             };
@@ -83,6 +86,35 @@ namespace DynamoDBAccessor.Services
             }
 
             return resultList;
+        }
+
+        public async Task<int> GetTodayLineMessageCountAsync(string userId)
+        {
+            // 今日の日付の0時を取得（UTCで）
+            var startOfToday = DateTime.UtcNow.Date;
+            var startOfTomorrow = startOfToday.AddDays(1);
+
+            // DynamoDBクエリのリクエスト作成
+            var queryRequest = new QueryRequest
+            {
+                TableName = "LineMessages",
+                IndexName = "UserId-EventTimestamp-index", // GSI
+                KeyConditionExpression = "UserId = :userId AND EventTimestamp BETWEEN :startOfToday AND :startOfTomorrow",
+                FilterExpression = "MessageText <> :resetText",
+                ExpressionAttributeValues = new Dictionary<string, AttributeValue>
+                {
+                    { ":userId", new AttributeValue { S = userId } },
+                    { ":startOfToday", new AttributeValue { N = ((DateTimeOffset)startOfToday).ToUnixTimeSeconds().ToString() } },
+                    { ":startOfTomorrow", new AttributeValue { N = ((DateTimeOffset)startOfTomorrow).ToUnixTimeSeconds().ToString() } },
+                    { ":resetText", new AttributeValue { S = "リセット" } }
+                }
+            };
+
+            // クエリ実行
+            var response = await client.QueryAsync(queryRequest);
+
+            // メッセージ数を返す
+            return response.Count;
         }
 
         public async Task AddLineMessageAsync(LineMessage lineMessage)
