@@ -97,11 +97,13 @@ namespace DynamoDBAccessor.Services
                 TableName = "LineMessages",
                 IndexName = "UserId-EventTimestamp-index", // GSI
                 KeyConditionExpression = "UserId = :userId AND EventTimestamp BETWEEN :startOfToday AND :startOfTomorrow",
+                FilterExpression = "MessageText <> :resetText",
                 ExpressionAttributeValues = new Dictionary<string, AttributeValue>
                 {
                     { ":userId", new AttributeValue { S = userId } },
                     { ":startOfToday", new AttributeValue { N = ((DateTimeOffset)startOfToday).ToUnixTimeSeconds().ToString() } },
-                    { ":startOfTomorrow", new AttributeValue { N = ((DateTimeOffset)startOfTomorrow).ToUnixTimeSeconds().ToString() } }
+                    { ":startOfTomorrow", new AttributeValue { N = ((DateTimeOffset)startOfTomorrow).ToUnixTimeSeconds().ToString() } },
+                    { ":resetText", new AttributeValue { S = "リセット" } }
                 }
             };
 
