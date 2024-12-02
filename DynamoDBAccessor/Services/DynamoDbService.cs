@@ -35,14 +35,17 @@ namespace DynamoDBAccessor.Services
 
         public async Task<List<LineMessage>> GetLineMessageByUserIDAsync(string userId)
         {
+            var oneHourAgo = DateTimeOffset.UtcNow.AddHours(-1).ToUnixTimeSeconds(); // 1時間前のUNIXタイム取得
+
             var queryRequest = new QueryRequest
             {
                 TableName = "LineMessages", // テーブル名
-                IndexName = "UserId-EventTimestamp-index",   // GSIの名前
-                KeyConditionExpression = "UserId = :userId",
+                IndexName = "UserId-EventTimestamp-index", // GSIの名前
+                KeyConditionExpression = "UserId = :userId AND EventTimestamp >= :oneHourAgo",
                 ExpressionAttributeValues = new Dictionary<string, AttributeValue>
                 {
-                    { ":userId", new AttributeValue { S = userId } }
+                    { ":userId", new AttributeValue { S = userId } },
+                    { ":oneHourAgo", new AttributeValue { N = oneHourAgo.ToString() } }
                 },
                 ScanIndexForward = false
             };
