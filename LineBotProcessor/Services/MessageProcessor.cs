@@ -52,8 +52,6 @@ namespace LineBotProcessor.Services
 
                     var replyToken = messageEvent.ReplyToken;
 
-                    System.IO.File.AppendAllText("temp.log", $"Nagiyu ReplyToken: {replyToken}\n");
-
                     var messageCount = await dynamoDbService.GetTodayLineMessageCountAsync(source.UserId);
                     if (messageCount >= int.Parse(AppSettings.GetSetting("LineSettings:MaxMessageCount:Nagiyu")))
                     {
@@ -180,8 +178,6 @@ namespace LineBotProcessor.Services
 
                     var replyToken = messageEvent.ReplyToken;
 
-                    System.IO.File.AppendAllText("temp.log", $"Gyaru ReplyToken: {replyToken}\n");
-
                     var messageCount = await dynamoDbService.GetTodayLineMessageCountAsync(source.UserId);
                     if (messageCount >= int.Parse(AppSettings.GetSetting("LineSettings:MaxMessageCount:Gyaru")))
                     {
@@ -198,9 +194,7 @@ namespace LineBotProcessor.Services
                             }
                         };
 
-                        System.IO.File.AppendAllText("temp.log", $"Inavlid ReplyToken: {replyToken}\n");
-
-                        await apiHandler.SendReplyAsync(payload);
+                        await apiHandler.SendGyaruReplyAsync(payload);
 
                         continue;
                     }
