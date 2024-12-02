@@ -194,6 +194,8 @@ namespace LineBotProcessor.Services
                             }
                         };
 
+                        System.IO.File.AppendAllText("temp.log", $"ReplyToken: {replyToken}\n");
+
                         await apiHandler.SendReplyAsync(payload);
 
                         continue;
