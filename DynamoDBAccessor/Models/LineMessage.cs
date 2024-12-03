@@ -8,7 +8,6 @@ using Amazon.DynamoDBv2.DataModel;
 
 namespace DynamoDBAccessor.Models
 {
-    [DynamoDBTable("LineMessages")]
     public class LineMessage
     {
         /// <summary>
