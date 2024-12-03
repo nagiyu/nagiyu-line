@@ -1,11 +1,14 @@
-﻿using LineBotProcessor.Models.Webhook.WebhookEvents.MessageObjects;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
 
-namespace LineBotProcessor.Models.Webhook.WebhookEvents
+using LineBridge.Models.Webhook.Events.Message.Objects;
+
+namespace LineBridge.Models.Webhook.Events.Message
 {
-    /// <summary>
-    /// メッセージイベント
-    /// </summary>
-    public class MessageEvent<T> : WebhookEventBase where T : MessageBase
+    public class MessageEvent<T> : EventBase where T : ObjectBase
     {
         /// <summary>
         /// 応答メッセージを送る際に使用する応答トークン

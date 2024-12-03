@@ -1,13 +1,17 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
 
-using LineBotProcessor.Models.Webhook.WebhookEvents;
+using LineBridge.Models.Webhook.Events;
 
-namespace LineBotProcessor.Models.Webhook
+namespace LineBridge.Models.Webhook
 {
     /// <summary>
     /// Webhookイベントのリクエストボディ
     /// </summary>
-    public class WebhookRequest<T> where T : WebhookEventBase
+    public class WebhookRequest<T> where T : EventBase
     {
         /// <summary>
         /// Webhookイベントを受信すべきボットのユーザーID

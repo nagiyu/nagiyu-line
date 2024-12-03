@@ -7,8 +7,10 @@ using Common.Utilities;
 using DynamoDBAccessor.Interfaces;
 using DynamoDBAccessor.Services;
 
-using LineBotProcessor.Interfaces;
-using LineBotProcessor.Services;
+using LineBridge.Interfaces.Webhook;
+using LineBridge.Interfaces.Message;
+using LineBridge.Services.Message;
+using LineBridge.Services.Webhook;
 
 using OpenAIConnect.Services;
 using OpenAIConnect.Interfaces;
@@ -16,8 +18,9 @@ using OpenAIConnect.Interfaces;
 var builder = WebApplication.CreateBuilder(args);
 
 // サービス登録
-builder.Services.AddTransient<IMessageProcessor, MessageProcessor>();
-builder.Services.AddTransient<IApiHandler, ApiHandler>();
+builder.Services.AddTransient<IGyaruWebhook, GyaruWebhook>();
+builder.Services.AddTransient<INagiyuWebhook, NagiyuWebhook>();
+builder.Services.AddTransient<IReplyMessage, ReplyMessage>();
 builder.Services.AddTransient<IOpenAIClient, OpenAIClient>();
 builder.Services.AddTransient<IDynamoDbService, DynamoDbService>();
 

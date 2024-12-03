@@ -1,63 +1,15 @@
-﻿using Newtonsoft.Json;
-using Newtonsoft.Json.Converters;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
 
-namespace LineBotProcessor.Models.Webhook.WebhookEvents
+namespace LineBridge.Models.Webhook.Events
 {
-    /// <summary>
-    /// イベントのタイプの Enum
-    /// </summary>
-    [JsonConverter(typeof(StringEnumConverter))]
-    public enum WebhookEventType
-    {
-        /// <summary>
-        /// メッセージイベント
-        /// </summary>
-        Message
-    }
-
-    /// <summary>
-    /// チャネルの状態の Enum
-    /// </summary>
-    [JsonConverter(typeof(StringEnumConverter))]
-    public enum WebhookEventMode
-    {
-        /// <summary>
-        /// チャネルがアクティブ
-        /// </summary>
-        Active,
-
-        /// <summary>
-        /// チャネルが待機状態
-        /// </summary>
-        Standby
-    }
-
-    /// <summary>
-    /// イベントの送信元情報 Enum
-    /// </summary>
-    [JsonConverter(typeof(StringEnumConverter))]
-    public enum SourceType
-    {
-        /// <summary>
-        /// 送信元ユーザー
-        /// </summary>
-        User,
-
-        /// <summary>
-        /// 送信元グループトーク
-        /// </summary>
-        Group,
-
-        /// <summary>
-        /// 送信元複数人トーク
-        /// </summary>
-        Room
-    }
-
     /// <summary>
     /// Webhookイベントオブジェクトの共通プロパティ
     /// </summary>
-    public class WebhookEventBase
+    public class EventBase
     {
         /// <summary>
         /// イベントのタイプを表す識別子

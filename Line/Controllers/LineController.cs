@@ -5,17 +5,19 @@ using Microsoft.AspNetCore.Mvc;
 
 using Common.Utilities;
 
-using LineBotProcessor.Interfaces;
+using LineBridge.Interfaces.Webhook;
 
 namespace Line.Controllers
 {
     public class LineController : Controller
     {
-        private readonly IMessageProcessor messageProcessor;
+        private readonly INagiyuWebhook nagiyuWebhook;
+        private readonly IGyaruWebhook gyaruWebhook;
 
-        public LineController(IMessageProcessor messageProcessor)
+        public LineController(INagiyuWebhook nagiyuWebhook, IGyaruWebhook gyaruWebhook)
         {
-            this.messageProcessor = messageProcessor;
+            this.nagiyuWebhook = nagiyuWebhook;
+            this.gyaruWebhook = gyaruWebhook;
         }
 
         [HttpPost]
@@ -26,7 +28,7 @@ namespace Line.Controllers
 
             try
             {
-                await messageProcessor.ProcessMessageAsync(requestBody);
+                await nagiyuWebhook.HandleWebhookEvent(requestBody);
             }
             catch (System.Exception ex)
             {
@@ -45,7 +47,7 @@ namespace Line.Controllers
 
             try
             {
-                await messageProcessor.ProcessGyaruMessageAsync(requestBody);
+                await gyaruWebhook.HandleWebhookEvent(requestBody);
             }
             catch (System.Exception ex)
             {
