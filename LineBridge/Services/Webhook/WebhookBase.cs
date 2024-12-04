@@ -12,6 +12,8 @@ using LineBridge.Models.Webhook.Events;
 using LineBridge.Models.Webhook.Events.Message;
 using LineBridge.Models.Webhook.Events.Message.Objects;
 
+using static LineBridge.Enums.Webhook.MessageEventEnums;
+
 namespace LineBridge.Services.Webhook
 {
     public abstract class WebhookBase : IWebhookBase
@@ -98,7 +100,7 @@ namespace LineBridge.Services.Webhook
                 return;
             }
 
-            if (messageEvent.Message.Type == "text")
+            if (messageEvent.Message.Type == MessageObjectType.Text)
             {
                 var textMessage = JsonHelper.Deserialize<WebhookRequest<MessageEvent<TextObject>>>(requestBody).Events[index].Message;
                 await HandleTextMessageEvent(textMessage);

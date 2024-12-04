@@ -4,6 +4,8 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
+using static LineBridge.Enums.Webhook.MessageEventEnums;
+
 namespace LineBridge.Models.Webhook.Events.Message.Objects
 {
     public class ObjectBase
@@ -11,7 +13,7 @@ namespace LineBridge.Models.Webhook.Events.Message.Objects
         /// <summary>
         /// メッセージタイプ
         /// </summary>
-        public string Type { get; set; }
+        public MessageObjectType Type { get; set; }
     }
 
     /// <summary>
