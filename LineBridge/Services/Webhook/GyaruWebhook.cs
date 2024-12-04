@@ -130,7 +130,7 @@ namespace LineBridge.Services.Webhook
                 GroupId = source.GroupId,
                 RoomId = source.RoomId,
                 EventTimestamp = timestamp,
-                EventType = eventType,
+                EventType = eventType.ToString(),
                 MessageId = textObject.Id,
                 MessageText = textObject.Text,
                 ReplyText = response

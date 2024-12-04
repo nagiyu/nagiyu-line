@@ -12,6 +12,7 @@ using LineBridge.Models.Webhook.Events;
 using LineBridge.Models.Webhook.Events.Message;
 using LineBridge.Models.Webhook.Events.Message.Objects;
 
+using static LineBridge.Enums.Webhook.EventEnums;
 using static LineBridge.Enums.Webhook.MessageEventEnums;
 
 namespace LineBridge.Services.Webhook
@@ -21,7 +22,7 @@ namespace LineBridge.Services.Webhook
         /// <summary>
         /// イベントのタイプを表す識別子
         /// </summary>
-        protected string eventType;
+        protected EventType eventType;
 
         /// <summary>
         /// イベント発生時刻 (UNIXタイム・ミリ秒)
@@ -76,7 +77,7 @@ namespace LineBridge.Services.Webhook
                 timestamp = request.Events[index].Timestamp;
                 source = request.Events[index].Source;
 
-                if (request.Events[index].Type == "message")
+                if (request.Events[index].Type == EventType.Message)
                 {
                     await HandleMessageEvent(requestBody, index);
                 }

@@ -4,6 +4,8 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
+using static LineBridge.Enums.Webhook.EventEnums;
+
 namespace LineBridge.Models.Webhook.Events
 {
     /// <summary>
@@ -14,7 +16,7 @@ namespace LineBridge.Models.Webhook.Events
         /// <summary>
         /// イベントのタイプを表す識別子
         /// </summary>
-        public string Type { get; set; }
+        public EventType Type { get; set; }
 
         /// <summary>
         /// チャネルの状態

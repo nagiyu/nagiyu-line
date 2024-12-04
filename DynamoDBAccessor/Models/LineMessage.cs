@@ -44,7 +44,7 @@ namespace DynamoDBAccessor.Models
         /// イベントタイプ
         /// </summary>
         [DynamoDBProperty]
-        public string EventType { get; set; }
+        public string EventType { get; set; } // TODO: LINE の Enum にしたい
 
         /// <summary>
         /// メッセージID
