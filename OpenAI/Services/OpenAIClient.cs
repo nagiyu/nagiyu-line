@@ -4,11 +4,11 @@ using System.Linq;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Text;
-using System.Text.Json;
 using System.Threading.Tasks;
 
 using Common.Utilities;
 
+using OpenAIConnect.Common.Consts;
 using OpenAIConnect.Common.Interfaces;
 using OpenAIConnect.Common.Models.Request;
 using OpenAIConnect.Common.Models.Response;
@@ -29,7 +29,7 @@ namespace OpenAIConnect.Services
         {
             var requestBody = new OpenAIRequest
             {
-                Model = "gpt-4o-mini",
+                Model = OpenAIConsts.Model.GPT_4O_MINI,
                 Messages = prompts
             };
 
