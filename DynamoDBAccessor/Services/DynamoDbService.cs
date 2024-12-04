@@ -7,7 +7,6 @@ using System.Threading.Tasks;
 using Amazon;
 using Amazon.DynamoDBv2;
 using Amazon.DynamoDBv2.DataModel;
-using Amazon.DynamoDBv2.DocumentModel;
 using Amazon.DynamoDBv2.Model;
 
 using Common.Utilities;
@@ -39,8 +38,8 @@ namespace DynamoDBAccessor.Services
 
             var queryRequest = new QueryRequest
             {
-                TableName = "LineMessages", // テーブル名
-                IndexName = "UserId-EventTimestamp-index", // GSIの名前
+                TableName = AppSettings.GetSetting("AWS:DynamoDB:TableName"), // テーブル名
+                IndexName = AppSettings.GetSetting("AWS:DynamoDB:IndexName"), // GSIの名前
                 KeyConditionExpression = "UserId = :userId AND EventTimestamp >= :oneHourAgo",
                 ExpressionAttributeValues = new Dictionary<string, AttributeValue>
                 {
@@ -53,7 +52,7 @@ namespace DynamoDBAccessor.Services
             var response = await client.QueryAsync(queryRequest);
 
             var resultList = new List<LineMessage>();
-            int maxResults = 20; // 最大取得件数の設定
+            var maxResults = AppSettings.GetSetting<int>("AWS:DynamoDB:MaxMessages"); // 最大取得件数の設定
 
             foreach (var item in response.Items)
             {
@@ -97,8 +96,8 @@ namespace DynamoDBAccessor.Services
             // DynamoDBクエリのリクエスト作成
             var queryRequest = new QueryRequest
             {
-                TableName = "LineMessages",
-                IndexName = "UserId-EventTimestamp-index", // GSI
+                TableName = AppSettings.GetSetting("AWS:DynamoDB:TableName"), // テーブル名
+                IndexName = AppSettings.GetSetting("AWS:DynamoDB:IndexName"), // GSIの名前
                 KeyConditionExpression = "UserId = :userId AND EventTimestamp BETWEEN :startOfToday AND :startOfTomorrow",
                 FilterExpression = "MessageText <> :resetText",
                 ExpressionAttributeValues = new Dictionary<string, AttributeValue>
@@ -119,7 +118,14 @@ namespace DynamoDBAccessor.Services
 
         public async Task AddLineMessageAsync(LineMessage lineMessage)
         {
-            await context.SaveAsync(lineMessage);
+            var tableName = AppSettings.GetSetting("AWS:DynamoDB:TableName");
+
+            var config = new DynamoDBOperationConfig
+            {
+                OverrideTableName = tableName
+            };
+
+            await context.SaveAsync(lineMessage, config);
         }
     }
 }

@@ -35,5 +35,21 @@ namespace Common.Utilities
 
             return _configuration[key];
         }
+
+        /// <summary>
+        /// 値を取得する
+        /// </summary>
+        /// <typeparam name="T">型</typeparam>
+        /// <param name="key">キー</param>
+        /// <returns>値</returns>
+        public static T GetSetting<T>(string key)
+        {
+            if (_configuration == null)
+            {
+                throw new InvalidOperationException("AppSettings is not initialized. Call Initialize() first.");
+            }
+
+            return _configuration.GetValue<T>(key);
+        }
     }
 }

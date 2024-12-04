@@ -1,31 +1,15 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
 
-using Newtonsoft.Json;
-using Newtonsoft.Json.Converters;
-
-namespace LineBotProcessor.Models.Webhook.WebhookEvents.MessageObjects
+namespace LineBridge.Models.Webhook.Events.Message.Objects
 {
-    /// <summary>
-    /// メンション対象のタイプ
-    /// </summary>
-    [JsonConverter(typeof(StringEnumConverter))]
-    public enum MentioneeType
-    {
-        /// <summary>
-        /// ユーザーまたはボット
-        /// </summary>
-        User,
-
-        /// <summary>
-        /// グループ全体
-        /// </summary>
-        All
-    }
-
     /// <summary>
     /// 送信元から送られたテキストを含むメッセージオブジェクト
     /// </summary>
-    public class TextMessage : MessageBase
+    public class TextObject : ObjectBase
     {
         /// <summary>
         /// メッセージID
