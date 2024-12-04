@@ -10,10 +10,4 @@
     <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
   </ItemGroup>
 
-  <ItemGroup>
-    <ProjectReference Include="..\Common\Common.csproj" />
-    <ProjectReference Include="..\DynamoDBAccessor\DynamoDBAccessor.csproj" />
-    <ProjectReference Include="..\OpenAIConnect.Common\OpenAIConnect.Common.csproj" />
-  </ItemGroup>
-
 </Project>

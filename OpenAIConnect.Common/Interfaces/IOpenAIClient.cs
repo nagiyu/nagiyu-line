@@ -4,9 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-using OpenAIConnect.Models.Request;
+using OpenAIConnect.Common.Models.Request;
 
-namespace OpenAIConnect.Interfaces
+namespace OpenAIConnect.Common.Interfaces
 {
     public interface IOpenAIClient
     {

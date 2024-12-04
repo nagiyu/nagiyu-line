@@ -12,8 +12,8 @@ using LineBridge.Interfaces.Message;
 using LineBridge.Services.Message;
 using LineBridge.Services.Webhook;
 
+using OpenAIConnect.Common.Interfaces;
 using OpenAIConnect.Services;
-using OpenAIConnect.Interfaces;
 
 var builder = WebApplication.CreateBuilder(args);
 

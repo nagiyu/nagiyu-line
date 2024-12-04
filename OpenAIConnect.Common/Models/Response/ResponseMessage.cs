@@ -4,11 +4,13 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace OpenAIConnect.Models.Response
+using static OpenAIConnect.Common.Enums.OpenAIEnums;
+
+namespace OpenAIConnect.Common.Models.Response
 {
     public class ResponseMessage
     {
-        public string Role { get; set; }
+        public Role Role { get; set; }
 
         public string Content { get; set; }
 

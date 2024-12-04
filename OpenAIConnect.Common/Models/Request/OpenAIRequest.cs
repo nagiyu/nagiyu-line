@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace OpenAIConnect.Models.Request
+namespace OpenAIConnect.Common.Models.Request
 {
     public class OpenAIRequest
     {

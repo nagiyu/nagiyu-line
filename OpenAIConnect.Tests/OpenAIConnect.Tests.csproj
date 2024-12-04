@@ -18,6 +18,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\OpenAIConnect.Common\OpenAIConnect.Common.csproj" />
     <ProjectReference Include="..\OpenAI\OpenAIConnect.csproj" />
   </ItemGroup>
 

@@ -9,9 +9,9 @@ using System.Threading.Tasks;
 
 using Common.Utilities;
 
-using OpenAIConnect.Interfaces;
-using OpenAIConnect.Models.Request;
-using OpenAIConnect.Models.Response;
+using OpenAIConnect.Common.Interfaces;
+using OpenAIConnect.Common.Models.Request;
+using OpenAIConnect.Common.Models.Response;
 
 namespace OpenAIConnect.Services
 {

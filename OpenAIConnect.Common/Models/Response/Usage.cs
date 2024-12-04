@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace OpenAIConnect.Models.Response
+namespace OpenAIConnect.Common.Models.Response
 {
     public class Usage
     {

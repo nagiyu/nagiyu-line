@@ -9,8 +9,10 @@ using Common.Utilities;
 using DynamoDBAccessor.Interfaces;
 using DynamoDBAccessor.Models;
 
-using OpenAIConnect.Interfaces;
-using OpenAIConnect.Models.Request;
+using OpenAIConnect.Common.Interfaces;
+using OpenAIConnect.Common.Models.Request;
+
+using static OpenAIConnect.Common.Enums.OpenAIEnums;
 
 using LineBridge.Interfaces.Message;
 using LineBridge.Interfaces.Webhook;
@@ -93,7 +95,7 @@ namespace LineBridge.Services.Webhook
             {
                 new RequestMessage
                 {
-                    Role = "system",
+                    Role = Role.System,
                     Content = AppSettings.GetSetting("SystemPrompts:Gyaru")
                 }
             };
@@ -102,20 +104,20 @@ namespace LineBridge.Services.Webhook
             {
                 prompts.Add(new RequestMessage
                 {
-                    Role = "user",
+                    Role = Role.User,
                     Content = pastMessage.MessageText
                 });
 
                 prompts.Add(new RequestMessage
                 {
-                    Role = "assistant",
+                    Role = Role.Assistant,
                     Content = pastMessage.ReplyText
                 });
             }
 
             prompts.Add(new RequestMessage
             {
-                Role = "user",
+                Role = Role.User,
                 Content = textObject.Text
             });
 

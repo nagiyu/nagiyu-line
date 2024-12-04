@@ -7,11 +7,16 @@ using System.Linq;
 using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
-using Common.Utilities;
+
 using Microsoft.Extensions.Configuration;
 
-using OpenAIConnect.Interfaces;
-using OpenAIConnect.Models.Request;
+using Common.Utilities;
+
+using OpenAIConnect.Common.Interfaces;
+using OpenAIConnect.Common.Models.Request;
+
+using static OpenAIConnect.Common.Enums.OpenAIEnums;
+
 using OpenAIConnect.Services;
 
 namespace OpenAIConnect.Tests.Services
@@ -43,12 +48,12 @@ namespace OpenAIConnect.Tests.Services
             {
                 new RequestMessage
                 {
-                    Role = "system",
+                    Role = Role.System,
                     Content = "You are a helpful assistant."
                 },
                 new RequestMessage
                 {
-                    Role = "user",
+                    Role = Role.User,
                     Content = "What is the meaning of life?"
                 }
             };
