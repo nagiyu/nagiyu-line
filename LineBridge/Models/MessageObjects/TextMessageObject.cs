@@ -4,6 +4,8 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
+using static LineBridge.Enums.Message.ObjectEnums;
+
 namespace LineBridge.Models.MessageObjects
 {
     /// <summary>
@@ -14,7 +16,7 @@ namespace LineBridge.Models.MessageObjects
         /// <summary>
         /// メッセージタイプ
         /// </summary>
-        public string Type { get; set; } = "text";
+        public EventType Type { get; set; } = EventType.Text;
 
         /// <summary>
         /// メッセージのテキスト

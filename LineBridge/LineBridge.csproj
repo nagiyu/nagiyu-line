@@ -16,9 +16,4 @@
     <ProjectReference Include="..\OpenAI\OpenAIConnect.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Enums\Webhook\Events\" />
-    <Folder Include="Enums\Message\" />
-  </ItemGroup>
-
 </Project>

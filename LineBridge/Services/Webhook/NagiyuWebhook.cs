@@ -18,6 +18,8 @@ using LineBridge.Models.Webhook.Events.Message.Objects;
 using LineBridge.Models.Message;
 using LineBridge.Models.MessageObjects;
 
+using static LineBridge.Enums.Message.ObjectEnums;
+
 namespace LineBridge.Services.Webhook
 {
     public class NagiyuWebhook : WebhookBase, INagiyuWebhook
@@ -69,7 +71,7 @@ namespace LineBridge.Services.Webhook
                 {
                     new TextMessageObject
                     {
-                        Type = "text",
+                        Type = EventType.Text,
                         Text = "今日の会話上限に達しました。また明日ご利用ください！"
                     }
                 }
@@ -143,7 +145,7 @@ namespace LineBridge.Services.Webhook
                 {
                     new TextMessageObject
                     {
-                        Type = "text",
+                        Type = EventType.Text,
                         Text = response
                     }
                 }
@@ -166,7 +168,7 @@ namespace LineBridge.Services.Webhook
                 {
                     new TextMessageObject
                     {
-                        Type = "text",
+                        Type = EventType.Text,
                         Text = "処理できないメッセージです。すみません！"
                     }
                 }
