@@ -13,7 +13,13 @@
   <ItemGroup>
     <ProjectReference Include="..\Common\Common.csproj" />
     <ProjectReference Include="..\DynamoDBAccessor\DynamoDBAccessor.csproj" />
+    <ProjectReference Include="..\LineBridge.Common\LineBridge.Common.csproj" />
+    <ProjectReference Include="..\LineBridge.Core\LineBridge.Core.csproj" />
     <ProjectReference Include="..\OpenAIConnect.Common\OpenAIConnect.Common.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Enums\" />
   </ItemGroup>
 
 </Project>

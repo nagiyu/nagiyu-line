@@ -8,12 +8,12 @@ using DynamoDBAccessor.Interfaces;
 using DynamoDBAccessor.Services;
 
 using LineBridge.Interfaces.Webhook;
-using LineBridge.Interfaces.Message;
-using LineBridge.Services.Message;
 using LineBridge.Services.Webhook;
 
 using OpenAIConnect.Common.Interfaces;
 using OpenAIConnect.Services;
+using LineBridge.Common.Interfaces.Message;
+using LineBridge.Core.Services.Message;
 
 var builder = WebApplication.CreateBuilder(args);
 

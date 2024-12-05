@@ -9,18 +9,19 @@ using Common.Utilities;
 using DynamoDBAccessor.Interfaces;
 using DynamoDBAccessor.Models;
 
+using OpenAIConnect.Common.Enums;
 using OpenAIConnect.Common.Interfaces;
 using OpenAIConnect.Common.Models.Request;
 
-using static OpenAIConnect.Common.Enums.OpenAIEnums;
+using LineBridge.Common.Enums.Message;
+using LineBridge.Common.Interfaces.Message;
+using LineBridge.Common.Models.Message;
+using LineBridge.Common.Models.MessageObjects;
+using LineBridge.Common.Models.Webhook.Events.Message.Objects;
 
-using LineBridge.Interfaces.Message;
+using LineBridge.Core.Services.Webhook;
+
 using LineBridge.Interfaces.Webhook;
-using LineBridge.Models.Webhook.Events.Message.Objects;
-using LineBridge.Models.Message;
-using LineBridge.Models.MessageObjects;
-
-using static LineBridge.Enums.Message.ObjectEnums;
 
 namespace LineBridge.Services.Webhook
 {
@@ -73,7 +74,7 @@ namespace LineBridge.Services.Webhook
                 {
                     new TextMessageObject
                     {
-                        Type = EventType.Text,
+                        Type = ObjectEnums.EventType.Text,
                         Text = "今日のトークはもうMAXいっちゃったわ💦また明日話そ〜ねん💕"
                     }
                 }
@@ -95,7 +96,7 @@ namespace LineBridge.Services.Webhook
             {
                 new RequestMessage
                 {
-                    Role = Role.System,
+                    Role = OpenAIEnums.Role.System,
                     Content = AppSettings.GetSetting("SystemPrompts:Gyaru")
                 }
             };
@@ -104,20 +105,20 @@ namespace LineBridge.Services.Webhook
             {
                 prompts.Add(new RequestMessage
                 {
-                    Role = Role.User,
+                    Role = OpenAIEnums.Role.User,
                     Content = pastMessage.MessageText
                 });
 
                 prompts.Add(new RequestMessage
                 {
-                    Role = Role.Assistant,
+                    Role = OpenAIEnums.Role.Assistant,
                     Content = pastMessage.ReplyText
                 });
             }
 
             prompts.Add(new RequestMessage
             {
-                Role = Role.User,
+                Role = OpenAIEnums.Role.User,
                 Content = textObject.Text
             });
 
@@ -147,7 +148,7 @@ namespace LineBridge.Services.Webhook
                 {
                     new TextMessageObject
                     {
-                        Type = EventType.Text,
+                        Type = ObjectEnums.EventType.Text,
                         Text = response
                     }
                 }
@@ -170,7 +171,7 @@ namespace LineBridge.Services.Webhook
                 {
                     new TextMessageObject
                     {
-                        Type = EventType.Text,
+                        Type = ObjectEnums.EventType.Text,
                         Text = "テキスト以外は受け付けてないんだ。ごめんね！"
                     }
                 }
