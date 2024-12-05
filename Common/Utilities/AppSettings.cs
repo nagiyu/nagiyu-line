@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 using Microsoft.Extensions.Configuration;
 
-namespace Common.Utilities
+namespace CommonKit.Utilities
 {
     public static class AppSettings
     {

@@ -15,7 +15,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Common\Common.csproj" />
+    <ProjectReference Include="..\Common\CommonKit.csproj" />
     <ProjectReference Include="..\LineBridge.Common\LineBridge.Common.csproj" />
   </ItemGroup>
 

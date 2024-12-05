@@ -5,7 +5,7 @@ VisualStudioVersion = 17.9.34723.18
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Line", "Line\Line.csproj", "{FCEEF1FB-4194-46C2-BB10-7BCDE6558E7C}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Common", "Common\Common.csproj", "{C1CEF5CB-7B64-41C2-888C-180431006FD6}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CommonKit", "Common\CommonKit.csproj", "{C1CEF5CB-7B64-41C2-888C-180431006FD6}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "OpenAIConnect", "OpenAI\OpenAIConnect.csproj", "{6B4675CD-CD4A-47E8-B8F7-3C1C33E6826E}"
 EndProject
@@ -19,9 +19,13 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LineBridge", "LineBridge\Li
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "OpenAIConnect.Common", "OpenAIConnect.Common\OpenAIConnect.Common.csproj", "{50010262-13BD-458F-A28A-3A660D83D291}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LineBridge.Common", "LineBridge.Common\LineBridge.Common.csproj", "{25CFC659-61A4-40C1-896E-9EB6AA21E954}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LineBridge.Common", "LineBridge.Common\LineBridge.Common.csproj", "{25CFC659-61A4-40C1-896E-9EB6AA21E954}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LineBridge.Core", "LineBridge.Core\LineBridge.Core.csproj", "{6EF5D597-1283-4FDD-97B9-F238378293D2}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LineBridge.Core", "LineBridge.Core\LineBridge.Core.csproj", "{6EF5D597-1283-4FDD-97B9-F238378293D2}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SettingsManager", "SettingsManager\SettingsManager.csproj", "{EE453E89-DC28-4C86-86D7-A754E4F87BCB}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SettingsRepository", "SettingsRepository.Common\SettingsRepository.csproj", "{CD9E1A50-B105-4B55-93A0-636F65EB2C2C}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -69,6 +73,14 @@ Global
 		{6EF5D597-1283-4FDD-97B9-F238378293D2}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{6EF5D597-1283-4FDD-97B9-F238378293D2}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{6EF5D597-1283-4FDD-97B9-F238378293D2}.Release|Any CPU.Build.0 = Release|Any CPU
+		{EE453E89-DC28-4C86-86D7-A754E4F87BCB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{EE453E89-DC28-4C86-86D7-A754E4F87BCB}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{EE453E89-DC28-4C86-86D7-A754E4F87BCB}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{EE453E89-DC28-4C86-86D7-A754E4F87BCB}.Release|Any CPU.Build.0 = Release|Any CPU
+		{CD9E1A50-B105-4B55-93A0-636F65EB2C2C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{CD9E1A50-B105-4B55-93A0-636F65EB2C2C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{CD9E1A50-B105-4B55-93A0-636F65EB2C2C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{CD9E1A50-B105-4B55-93A0-636F65EB2C2C}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

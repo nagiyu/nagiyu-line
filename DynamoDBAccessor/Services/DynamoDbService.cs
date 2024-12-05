@@ -9,7 +9,7 @@ using Amazon.DynamoDBv2;
 using Amazon.DynamoDBv2.DataModel;
 using Amazon.DynamoDBv2.Model;
 
-using Common.Utilities;
+using CommonKit.Utilities;
 
 using DynamoDBAccessor.Interfaces;
 using DynamoDBAccessor.Models;

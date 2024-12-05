@@ -6,7 +6,7 @@ using System.Net.Http.Headers;
 using System.Text;
 using System.Threading.Tasks;
 
-using Common.Utilities;
+using CommonKit.Utilities;
 
 using OpenAIConnect.Common.Consts;
 using OpenAIConnect.Common.Interfaces;

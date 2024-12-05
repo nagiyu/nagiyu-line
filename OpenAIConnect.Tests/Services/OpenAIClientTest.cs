@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 
 using Microsoft.Extensions.Configuration;
 
-using Common.Utilities;
+using CommonKit.Utilities;
 
 using OpenAIConnect.Common.Interfaces;
 using OpenAIConnect.Common.Models.Request;

@@ -11,7 +11,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Common\Common.csproj" />
+    <ProjectReference Include="..\Common\CommonKit.csproj" />
     <ProjectReference Include="..\DynamoDBAccessor\DynamoDBAccessor.csproj" />
     <ProjectReference Include="..\LineBridge.Common\LineBridge.Common.csproj" />
     <ProjectReference Include="..\LineBridge.Core\LineBridge.Core.csproj" />
