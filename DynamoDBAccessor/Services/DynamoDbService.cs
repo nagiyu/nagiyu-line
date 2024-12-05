@@ -62,10 +62,10 @@ namespace DynamoDBAccessor.Services
             {
                 var messageText = item["MessageText"].S;
 
-                // 除外文言が指定されていて、含まれている場合はスキップ
+                // 除外文言が指定されていて、含まれている場合は終了
                 if (excludeWords.Contains(messageText))
                 {
-                    continue;
+                    break;
                 }
 
                 resultList.Insert(0, new LineMessage

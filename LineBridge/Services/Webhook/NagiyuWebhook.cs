@@ -55,7 +55,7 @@ namespace LineBridge.Services.Webhook
         /// <returns>true: 最大件数に達した, false: 最大件数に達していない</returns>
         protected override async Task<bool> CheckMaxTalkCount()
         {
-            var messageCount = await dynamoDbService.GetTodayLineMessageCountAsync(source.UserId);
+            var messageCount = await dynamoDbService.GetTodayLineMessageCountAsync(source.UserId, new List<string> { "リセット" });
 
             return messageCount >= AppSettings.GetSetting<int>("LineSettings:MaxMessageCount:Nagiyu");
         }
@@ -89,8 +89,7 @@ namespace LineBridge.Services.Webhook
         /// <param name="textObject">送信元から送られたテキストを含むメッセージオブジェクト</param>
         protected override async Task HandleTextMessageEvent(TextObject textObject)
         {
-
-            var pastMessages = await dynamoDbService.GetLineMessageByUserIDAsync(source.UserId);
+            var pastMessages = await dynamoDbService.GetLineMessageByUserIDAsync(source.UserId, new List<string> { "リセット" });
 
             var prompts = new List<RequestMessage>
             {
