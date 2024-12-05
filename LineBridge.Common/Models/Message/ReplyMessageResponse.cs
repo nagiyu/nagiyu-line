@@ -25,7 +25,7 @@ namespace LineBridge.Common.Models.Message
         /// <summary>
         /// 送信したメッセージのID
         /// </summary>
-        public int Id { get; set; }
+        public long Id { get; set; }
 
         /// <summary>
         /// メッセージの引用トークン

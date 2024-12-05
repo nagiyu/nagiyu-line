@@ -76,7 +76,8 @@ namespace LineBridge.Core.Services.Webhook
         public async Task HandleWebhookEvent(IDictionary<string, StringValues> headers, string requestBody)
         {
 #if !DEBUG
-            var xLineSignature = headers.Keys.FirstOrDefault(key => string.Equals(key, "X-Line-Signature", StringComparison.OrdinalIgnoreCase));
+            var key = headers.Keys.FirstOrDefault(key => string.Equals(key, "X-Line-Signature", StringComparison.OrdinalIgnoreCase));
+            var xLineSignature = headers[key].ToString();
 
             if (!ValidateLineSignature(requestBody, xLineSignature))
             {
@@ -139,14 +140,12 @@ namespace LineBridge.Core.Services.Webhook
             var channelSecret = GetChannelSecret();
 
             // シークレットキーとリクエストボディを使って HMAC-SHA256 を計算
-            using (var hmac = new HMACSHA256(Encoding.UTF8.GetBytes(channelSecret)))
-            {
-                var hash = hmac.ComputeHash(Encoding.UTF8.GetBytes(requestBody));
-                var computedSignature = Convert.ToBase64String(hash);
+            using var hmac = new HMACSHA256(Encoding.UTF8.GetBytes(channelSecret));
+            var hash = hmac.ComputeHash(Encoding.UTF8.GetBytes(requestBody));
+            var computedSignature = Convert.ToBase64String(hash);
 
-                // 署名を比較
-                return computedSignature == xLineSignature;
-            }
+            // 署名を比較
+            return computedSignature == xLineSignature;
         }
     }
 }
