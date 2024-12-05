@@ -32,8 +32,11 @@ namespace DynamoDBAccessor.Services
             context = new DynamoDBContext(client);
         }
 
-        public async Task<List<LineMessage>> GetLineMessageByUserIDAsync(string userId)
+        public async Task<List<LineMessage>> GetLineMessageByUserIDAsync(string userId, List<string> excludeWords = null)
         {
+            // excludeWords が null の場合は空リストを設定
+            excludeWords ??= new List<string>();
+
             var oneHourAgo = DateTimeOffset.UtcNow.AddHours(-1).ToUnixTimeSeconds(); // 1時間前のUNIXタイム取得
 
             var queryRequest = new QueryRequest
@@ -49,6 +52,7 @@ namespace DynamoDBAccessor.Services
                 ScanIndexForward = false
             };
 
+            // クエリ実行
             var response = await client.QueryAsync(queryRequest);
 
             var resultList = new List<LineMessage>();
@@ -58,10 +62,10 @@ namespace DynamoDBAccessor.Services
             {
                 var messageText = item["MessageText"].S;
 
-                // "リセット" が見つかったら処理終了
-                if (messageText == "リセット")
+                // 除外文言が指定されていて、含まれている場合はスキップ
+                if (excludeWords.Contains(messageText))
                 {
-                    break;
+                    continue;
                 }
 
                 resultList.Insert(0, new LineMessage
@@ -73,7 +77,7 @@ namespace DynamoDBAccessor.Services
                     EventTimestamp = long.Parse(item["EventTimestamp"].N),
                     EventType = null,
                     MessageId = null,
-                    MessageText = item["MessageText"].S,
+                    MessageText = messageText,
                     ReplyText = item["ReplyText"].S
                 });
 
@@ -87,27 +91,43 @@ namespace DynamoDBAccessor.Services
             return resultList;
         }
 
-        public async Task<int> GetTodayLineMessageCountAsync(string userId)
+        public async Task<int> GetTodayLineMessageCountAsync(string userId, List<string> excludeWords = null)
         {
+            // excludeWords が null の場合は空リストを設定
+            excludeWords ??= new List<string>();
+
             // 今日の日付の0時を取得（UTCで）
             var startOfToday = DateTime.UtcNow.Date;
             var startOfTomorrow = startOfToday.AddDays(1);
 
-            // DynamoDBクエリのリクエスト作成
+            // ベースクエリ作成
             var queryRequest = new QueryRequest
             {
                 TableName = AppSettings.GetSetting("AWS:DynamoDB:TableName"), // テーブル名
                 IndexName = AppSettings.GetSetting("AWS:DynamoDB:IndexName"), // GSIの名前
                 KeyConditionExpression = "UserId = :userId AND EventTimestamp BETWEEN :startOfToday AND :startOfTomorrow",
-                FilterExpression = "MessageText <> :resetText",
                 ExpressionAttributeValues = new Dictionary<string, AttributeValue>
                 {
                     { ":userId", new AttributeValue { S = userId } },
                     { ":startOfToday", new AttributeValue { N = ((DateTimeOffset)startOfToday).ToUnixTimeSeconds().ToString() } },
-                    { ":startOfTomorrow", new AttributeValue { N = ((DateTimeOffset)startOfTomorrow).ToUnixTimeSeconds().ToString() } },
-                    { ":resetText", new AttributeValue { S = "リセット" } }
+                    { ":startOfTomorrow", new AttributeValue { N = ((DateTimeOffset)startOfTomorrow).ToUnixTimeSeconds().ToString() } }
                 }
             };
+
+            // 除外文言があればFilterExpressionを追加
+            if (excludeWords.Count > 0)
+            {
+                var filterConditions = new string[excludeWords.Count];
+
+                for (int i = 0; i < excludeWords.Count; i++)
+                {
+                    var placeholder = $":excludeWord{i}";
+                    filterConditions[i] = $"MessageText <> {placeholder}";
+                    queryRequest.ExpressionAttributeValues.Add(placeholder, new AttributeValue { S = excludeWords[i] });
+                }
+
+                queryRequest.FilterExpression = string.Join(" AND ", filterConditions);
+            }
 
             // クエリ実行
             var response = await client.QueryAsync(queryRequest);

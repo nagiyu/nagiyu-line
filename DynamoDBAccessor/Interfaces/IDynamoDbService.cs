@@ -10,9 +10,9 @@ namespace DynamoDBAccessor.Interfaces
 {
     public interface IDynamoDbService
     {
-        Task<List<LineMessage>> GetLineMessageByUserIDAsync(string userId);
+        Task<List<LineMessage>> GetLineMessageByUserIDAsync(string userId, List<string> excludeWords = null);
 
-        Task<int> GetTodayLineMessageCountAsync(string userId);
+        Task<int> GetTodayLineMessageCountAsync(string userId, List<string> excludeWords = null);
 
         Task AddLineMessageAsync(LineMessage lineMessage);
     }

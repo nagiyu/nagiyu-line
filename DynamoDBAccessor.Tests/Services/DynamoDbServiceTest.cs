@@ -57,7 +57,7 @@ namespace DynamoDBAccessor.Tests.Services
         }
 
         [TestMethod]
-        public async Task GetTodayLineMessageCountAsync()
+        public async Task GetTodayLineMessageCountAsync_NoFilters()
         {
             // Arrange
             var userId = "test-user-id";
@@ -72,13 +72,79 @@ namespace DynamoDBAccessor.Tests.Services
         }
 
         [TestMethod]
-        public async Task GetLineMessageByUserIDAsync()
+        public async Task GetTodayLineMessageCountAsync_EmptyFilters()
+        {
+            // Arrange
+            var userId = "test-user-id";
+
+            // Act
+            var result = await dynamoDbService.GetTodayLineMessageCountAsync(userId, new List<string> { });
+
+            Debug.WriteLine(result);
+
+            // Assert
+            Assert.IsNotNull(result);
+        }
+
+        [TestMethod]
+        public async Task GetTodayLineMessageCountAsync_WithResetFilter()
+        {
+            // Arrange
+            var userId = "test-user-id";
+
+            // Act
+            var result = await dynamoDbService.GetTodayLineMessageCountAsync(userId, new List<string> { "リセット" });
+
+            Debug.WriteLine(result);
+
+            // Assert
+            Assert.IsNotNull(result);
+        }
+
+        [TestMethod]
+        public async Task GetLineMessageByUserIDAsync_NoFilters()
         {
             // Arrange
             var userId = "test-user-id";
 
             // Act
             var result = await dynamoDbService.GetLineMessageByUserIDAsync(userId);
+
+            foreach (var item in result)
+            {
+                Debug.WriteLine($"{item.UserId}, {item.EventTimestamp}, {item.MessageText}, {item.ReplyText}");
+            }
+
+            // Assert
+            Assert.IsNotNull(result);
+        }
+
+        [TestMethod]
+        public async Task GetLineMessageByUserIDAsync_EmptyFilters()
+        {
+            // Arrange
+            var userId = "test-user-id";
+
+            // Act
+            var result = await dynamoDbService.GetLineMessageByUserIDAsync(userId, new List<string> { });
+
+            foreach (var item in result)
+            {
+                Debug.WriteLine($"{item.UserId}, {item.EventTimestamp}, {item.MessageText}, {item.ReplyText}");
+            }
+
+            // Assert
+            Assert.IsNotNull(result);
+        }
+
+        [TestMethod]
+        public async Task GetLineMessageByUserIDAsync_WithResetFilter()
+        {
+            // Arrange
+            var userId = "test-user-id";
+
+            // Act
+            var result = await dynamoDbService.GetLineMessageByUserIDAsync(userId, new List<string> { "リセット" });
 
             foreach (var item in result)
             {
