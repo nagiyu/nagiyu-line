@@ -21,6 +21,7 @@ using LineBridge.Common.Models.Webhook.Events.Message.Objects;
 
 using LineBridge.Core.Services.Webhook;
 
+using LineBridge.Consts;
 using LineBridge.Interfaces.Webhook;
 
 namespace LineBridge.Services.Webhook
@@ -55,7 +56,7 @@ namespace LineBridge.Services.Webhook
         /// <returns>true: 最大件数に達した, false: 最大件数に達していない</returns>
         protected override async Task<bool> CheckMaxTalkCount()
         {
-            var messageCount = await dynamoDbService.GetTodayLineMessageCountAsync(source.UserId, new List<string> { "リセット" });
+            var messageCount = await dynamoDbService.GetTodayLineMessageCountAsync(source.UserId, new List<string> { LineConsts.RESET_MESSAGE });
 
             return messageCount >= AppSettings.GetSetting<int>("LineSettings:MaxMessageCount:Nagiyu");
         }
@@ -89,7 +90,7 @@ namespace LineBridge.Services.Webhook
         /// <param name="textObject">送信元から送られたテキストを含むメッセージオブジェクト</param>
         protected override async Task HandleTextMessageEvent(TextObject textObject)
         {
-            var pastMessages = await dynamoDbService.GetLineMessageByUserIDAsync(source.UserId, new List<string> { "リセット" });
+            var pastMessages = await dynamoDbService.GetLineMessageByUserIDAsync(source.UserId, new List<string> { LineConsts.RESET_MESSAGE });
 
             var prompts = new List<RequestMessage>
             {
@@ -121,7 +122,7 @@ namespace LineBridge.Services.Webhook
                 Content = textObject.Text
             });
 
-            var response = textObject.Text != "リセット"
+            var response = textObject.Text != LineConsts.RESET_MESSAGE
                 ? await openAIClient.SendRequestAsync(prompts)
                 : "Reset completed!!!";
 
