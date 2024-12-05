@@ -51,6 +51,15 @@ namespace LineBridge.Services.Webhook
         }
 
         /// <summary>
+        /// チャンネルシークレットを取得する
+        /// </summary>
+        /// <returns>チャンネルシークレット</returns>
+        protected override string GetChannelSecret()
+        {
+            return AppSettings.GetSetting("LineSettings:ChannelSecret:Gyaru");
+        }
+
+        /// <summary>
         /// トークの最大件数をチェックする
         /// </summary>
         /// <returns>true: 最大件数に達した, false: 最大件数に達していない</returns>

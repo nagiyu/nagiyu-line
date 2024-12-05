@@ -1,8 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
+
+using Microsoft.Extensions.Primitives;
 
 using Common.Utilities;
 
@@ -37,6 +40,11 @@ namespace LineBridge.Core.Services.Webhook
         /// </summary>
         protected string replyToken;
 
+        /// <summary>
+        /// チャンネルシークレットを取得する
+        /// </summary>
+        /// <returns>チャンネルシークレット</returns>
+        protected abstract string GetChannelSecret();
 
         /// <summary>
         /// トークの最大件数をチェックする
@@ -63,9 +71,19 @@ namespace LineBridge.Core.Services.Webhook
         /// <summary>
         /// Webhook イベントを処理する
         /// </summary>
+        /// <param name="headers">ヘッダー</param>
         /// <param name="requestBody">リクエストボディ</param>
-        public async Task HandleWebhookEvent(string requestBody)
+        public async Task HandleWebhookEvent(IDictionary<string, StringValues> headers, string requestBody)
         {
+#if !DEBUG
+            var xLineSignature = headers["X-Line-Signature"];
+
+            if (!ValidateLineSignature(requestBody, xLineSignature))
+            {
+                throw new UnauthorizedAccessException("Invalid X-Line-Signature");
+            }
+#endif
+
             var request = JsonHelper.Deserialize<WebhookRequest<EventBase>>(requestBody);
 
             // Event でループする
@@ -107,6 +125,27 @@ namespace LineBridge.Core.Services.Webhook
             else
             {
                 await HandleUndefinedEvent();
+            }
+        }
+
+        /// <summary>
+        /// LINE Webhook リクエストの署名を検証するメソッド
+        /// </summary>
+        /// <param name="requestBody">リクエストボディ</param>
+        /// <param name="xLineSignature">LINE の署名ヘッダー</param>
+        /// <returns>true: 署名が一致, false: 署名が不一致</returns>
+        private bool ValidateLineSignature(string requestBody, string xLineSignature)
+        {
+            var channelSecret = GetChannelSecret();
+
+            // シークレットキーとリクエストボディを使って HMAC-SHA256 を計算
+            using (var hmac = new HMACSHA256(Encoding.UTF8.GetBytes(channelSecret)))
+            {
+                var hash = hmac.ComputeHash(Encoding.UTF8.GetBytes(requestBody));
+                var computedSignature = Convert.ToBase64String(hash);
+
+                // 署名を比較
+                return computedSignature == xLineSignature;
             }
         }
     }
