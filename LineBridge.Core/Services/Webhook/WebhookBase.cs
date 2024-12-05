@@ -76,7 +76,7 @@ namespace LineBridge.Core.Services.Webhook
         public async Task HandleWebhookEvent(IDictionary<string, StringValues> headers, string requestBody)
         {
 #if !DEBUG
-            var xLineSignature = headers["X-Line-Signature"];
+            var xLineSignature = headers.Keys.FirstOrDefault(key => string.Equals(key, "X-Line-Signature", StringComparison.OrdinalIgnoreCase));
 
             if (!ValidateLineSignature(requestBody, xLineSignature))
             {
