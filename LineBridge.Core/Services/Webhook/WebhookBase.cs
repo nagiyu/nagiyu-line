@@ -139,15 +139,10 @@ namespace LineBridge.Core.Services.Webhook
         {
             var channelSecret = GetChannelSecret();
 
-            System.IO.File.AppendAllText("Temp.log", $"{DateTime.Now} ChannelSecret: {channelSecret}\n");
-
             // シークレットキーとリクエストボディを使って HMAC-SHA256 を計算
             using var hmac = new HMACSHA256(Encoding.UTF8.GetBytes(channelSecret));
             var hash = hmac.ComputeHash(Encoding.UTF8.GetBytes(requestBody));
             var computedSignature = Convert.ToBase64String(hash);
-
-            System.IO.File.AppendAllText("Temp.log", $"{DateTime.Now} ComputedSignature: {computedSignature}\n");
-            System.IO.File.AppendAllText("Temp.log", $"{DateTime.Now} XLineSignature: {xLineSignature}\n");
 
             // 署名を比較
             return computedSignature == xLineSignature;
