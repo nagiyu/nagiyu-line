@@ -9,14 +9,20 @@ using Common.Utilities;
 using DynamoDBAccessor.Interfaces;
 using DynamoDBAccessor.Models;
 
-using OpenAIConnect.Interfaces;
-using OpenAIConnect.Models.Request;
+using OpenAIConnect.Common.Enums;
+using OpenAIConnect.Common.Interfaces;
+using OpenAIConnect.Common.Models.Request;
 
-using LineBridge.Interfaces.Message;
+using LineBridge.Common.Enums.Message;
+using LineBridge.Common.Interfaces.Message;
+using LineBridge.Common.Models.Message;
+using LineBridge.Common.Models.MessageObjects;
+using LineBridge.Common.Models.Webhook.Events.Message.Objects;
+
+using LineBridge.Core.Services.Webhook;
+
+using LineBridge.Consts;
 using LineBridge.Interfaces.Webhook;
-using LineBridge.Models.Webhook.Events.Message.Objects;
-using LineBridge.Models.Message;
-using LineBridge.Models.MessageObjects;
 
 namespace LineBridge.Services.Webhook
 {
@@ -50,7 +56,7 @@ namespace LineBridge.Services.Webhook
         /// <returns>true: 最大件数に達した, false: 最大件数に達していない</returns>
         protected override async Task<bool> CheckMaxTalkCount()
         {
-            var messageCount = await dynamoDbService.GetTodayLineMessageCountAsync(source.UserId);
+            var messageCount = await dynamoDbService.GetTodayLineMessageCountAsync(source.UserId, new List<string> { LineConsts.RESET_MESSAGE });
 
             return messageCount >= AppSettings.GetSetting<int>("LineSettings:MaxMessageCount:Nagiyu");
         }
@@ -69,7 +75,7 @@ namespace LineBridge.Services.Webhook
                 {
                     new TextMessageObject
                     {
-                        Type = "text",
+                        Type = ObjectEnums.EventType.Text,
                         Text = "今日の会話上限に達しました。また明日ご利用ください！"
                     }
                 }
@@ -84,14 +90,13 @@ namespace LineBridge.Services.Webhook
         /// <param name="textObject">送信元から送られたテキストを含むメッセージオブジェクト</param>
         protected override async Task HandleTextMessageEvent(TextObject textObject)
         {
-
-            var pastMessages = await dynamoDbService.GetLineMessageByUserIDAsync(source.UserId);
+            var pastMessages = await dynamoDbService.GetLineMessageByUserIDAsync(source.UserId, new List<string> { LineConsts.RESET_MESSAGE });
 
             var prompts = new List<RequestMessage>
             {
                 new RequestMessage
                 {
-                    Role = "system",
+                    Role = OpenAIEnums.Role.System,
                     Content = AppSettings.GetSetting("SystemPrompts:Nagiyu")
                 }
             };
@@ -100,24 +105,24 @@ namespace LineBridge.Services.Webhook
             {
                 prompts.Add(new RequestMessage
                 {
-                    Role = "user",
+                    Role = OpenAIEnums.Role.User,
                     Content = pastMessage.MessageText
                 });
 
                 prompts.Add(new RequestMessage
                 {
-                    Role = "assistant",
+                    Role = OpenAIEnums.Role.Assistant,
                     Content = pastMessage.ReplyText
                 });
             }
 
             prompts.Add(new RequestMessage
             {
-                Role = "user",
+                Role = OpenAIEnums.Role.User,
                 Content = textObject.Text
             });
 
-            var response = textObject.Text != "リセット"
+            var response = textObject.Text != LineConsts.RESET_MESSAGE
                 ? await openAIClient.SendRequestAsync(prompts)
                 : "Reset completed!!!";
 
@@ -128,7 +133,7 @@ namespace LineBridge.Services.Webhook
                 GroupId = source.GroupId,
                 RoomId = source.RoomId,
                 EventTimestamp = timestamp,
-                EventType = eventType,
+                EventType = eventType.ToString(),
                 MessageId = textObject.Id,
                 MessageText = textObject.Text,
                 ReplyText = response
@@ -143,7 +148,7 @@ namespace LineBridge.Services.Webhook
                 {
                     new TextMessageObject
                     {
-                        Type = "text",
+                        Type = ObjectEnums.EventType.Text,
                         Text = response
                     }
                 }
@@ -166,7 +171,7 @@ namespace LineBridge.Services.Webhook
                 {
                     new TextMessageObject
                     {
-                        Type = "text",
+                        Type = ObjectEnums.EventType.Text,
                         Text = "処理できないメッセージです。すみません！"
                     }
                 }

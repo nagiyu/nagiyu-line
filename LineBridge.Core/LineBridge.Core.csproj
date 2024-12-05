@@ -6,16 +6,17 @@
     <Nullable>disable</Nullable>
   </PropertyGroup>
 
-  <ItemGroup>
-    <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
-  </ItemGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+    <NoWarn>1701;1702;CS1998</NoWarn>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
+    <NoWarn>1701;1702;CS1998</NoWarn>
+  </PropertyGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\Common\Common.csproj" />
-    <ProjectReference Include="..\DynamoDBAccessor\DynamoDBAccessor.csproj" />
     <ProjectReference Include="..\LineBridge.Common\LineBridge.Common.csproj" />
-    <ProjectReference Include="..\LineBridge.Core\LineBridge.Core.csproj" />
-    <ProjectReference Include="..\OpenAIConnect.Common\OpenAIConnect.Common.csproj" />
   </ItemGroup>
 
 </Project>
