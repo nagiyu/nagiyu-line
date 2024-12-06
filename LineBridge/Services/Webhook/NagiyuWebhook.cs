@@ -75,6 +75,9 @@ namespace LineBridge.Services.Webhook
         {
             var messageCount = await dynamoDbService.GetTodayLineMessageCountAsync(source.UserId, new List<string> { LineConsts.RESET_MESSAGE });
 
+            LogHelper.WriteLog($"Message Count: {messageCount}");
+            LogHelper.WriteLog($"Max Message Count: {await appSettingsService.GetValueByKeyAsync<int>("LineSettings:MaxMessageCount:Nagiyu")}");
+
             return messageCount >= await appSettingsService.GetValueByKeyAsync<int>("LineSettings:MaxMessageCount:Nagiyu");
         }
 
