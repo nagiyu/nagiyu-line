@@ -46,7 +46,7 @@ namespace DynamoDBAccessor.Services
             // excludeWords が null の場合は空リストを設定
             excludeWords ??= new List<string>();
 
-            var oneHourAgo = DateTimeOffset.UtcNow.AddHours(-1).ToUnixTimeSeconds() * 1000; // 1時間前のUNIXタイム取得
+            var oneHourAgo = DateTimeOffset.UtcNow.AddHours(-1).ToUnixTimeMilliseconds(); // 1時間前のUNIXタイム取得
 
             var queryRequest = new QueryRequest
             {
@@ -118,8 +118,8 @@ namespace DynamoDBAccessor.Services
                 ExpressionAttributeValues = new Dictionary<string, AttributeValue>
                 {
                     { ":userId", new AttributeValue { S = userId } },
-                    { ":startOfToday", new AttributeValue { N = (((DateTimeOffset)startOfToday).ToUnixTimeSeconds() * 1000).ToString() } },
-                    { ":startOfTomorrow", new AttributeValue { N = (((DateTimeOffset)startOfTomorrow).ToUnixTimeSeconds() * 1000).ToString() } }
+                    { ":startOfToday", new AttributeValue { N = ((DateTimeOffset)startOfToday).ToUnixTimeMilliseconds().ToString() } },
+                    { ":startOfTomorrow", new AttributeValue { N = ((DateTimeOffset)startOfTomorrow).ToUnixTimeMilliseconds().ToString() } }
                 }
             };
 
