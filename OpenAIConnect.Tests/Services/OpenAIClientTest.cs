@@ -7,11 +7,20 @@ using System.Linq;
 using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
-using Common.Utilities;
+
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 
-using OpenAIConnect.Interfaces;
-using OpenAIConnect.Models.Request;
+using CommonKit.Utilities;
+
+using SettingsManager.Services;
+using SettingsRepository;
+
+using OpenAIConnect.Common.Interfaces;
+using OpenAIConnect.Common.Models.Request;
+
+using static OpenAIConnect.Common.Enums.OpenAIEnums;
+
 using OpenAIConnect.Services;
 
 namespace OpenAIConnect.Tests.Services
@@ -19,6 +28,14 @@ namespace OpenAIConnect.Tests.Services
     [TestClass]
     public class OpenAIClientTest
     {
+        /// <summary>
+        /// AppSettingsService
+        /// </summary>
+        private readonly AppSettingsService appSettingsService;
+
+        private AppDbContext context;
+        private IConfiguration configuration;
+
         private readonly HttpClient httpClient;
         private readonly IOpenAIClient openAIClient;
 
@@ -28,11 +45,20 @@ namespace OpenAIConnect.Tests.Services
             var builder = new ConfigurationBuilder()
                 .SetBasePath(basePath)
                 .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true);
+            configuration = builder.Build();
 
-            AppSettings.Initialize(builder.Build());
+            var connectionString = configuration.GetConnectionString("SettingsDBConnection");
+            Debug.WriteLine($"Connection String: {connectionString}");
+
+            var options = new DbContextOptionsBuilder<AppDbContext>()
+                .UseNpgsql(connectionString)
+                .Options;
+            context = new AppDbContext(options);
+
+            appSettingsService = new AppSettingsService(context);
 
             httpClient = new HttpClient();
-            openAIClient = new OpenAIClient(httpClient);
+            openAIClient = new OpenAIClient(appSettingsService, httpClient);
         }
 
         [TestMethod]
@@ -43,12 +69,12 @@ namespace OpenAIConnect.Tests.Services
             {
                 new RequestMessage
                 {
-                    Role = "system",
+                    Role = Role.System,
                     Content = "You are a helpful assistant."
                 },
                 new RequestMessage
                 {
-                    Role = "user",
+                    Role = Role.User,
                     Content = "What is the meaning of life?"
                 }
             };
