@@ -8,9 +8,13 @@ using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
 
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 
-using Common.Utilities;
+using CommonKit.Utilities;
+
+using SettingsManager.Services;
+using SettingsRepository;
 
 using OpenAIConnect.Common.Interfaces;
 using OpenAIConnect.Common.Models.Request;
@@ -24,6 +28,14 @@ namespace OpenAIConnect.Tests.Services
     [TestClass]
     public class OpenAIClientTest
     {
+        /// <summary>
+        /// AppSettingsService
+        /// </summary>
+        private readonly AppSettingsService appSettingsService;
+
+        private AppDbContext context;
+        private IConfiguration configuration;
+
         private readonly HttpClient httpClient;
         private readonly IOpenAIClient openAIClient;
 
@@ -33,11 +45,20 @@ namespace OpenAIConnect.Tests.Services
             var builder = new ConfigurationBuilder()
                 .SetBasePath(basePath)
                 .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true);
+            configuration = builder.Build();
 
-            AppSettings.Initialize(builder.Build());
+            var connectionString = configuration.GetConnectionString("SettingsDBConnection");
+            Debug.WriteLine($"Connection String: {connectionString}");
+
+            var options = new DbContextOptionsBuilder<AppDbContext>()
+                .UseNpgsql(connectionString)
+                .Options;
+            context = new AppDbContext(options);
+
+            appSettingsService = new AppSettingsService(context);
 
             httpClient = new HttpClient();
-            openAIClient = new OpenAIClient(httpClient);
+            openAIClient = new OpenAIClient(appSettingsService, httpClient);
         }
 
         [TestMethod]

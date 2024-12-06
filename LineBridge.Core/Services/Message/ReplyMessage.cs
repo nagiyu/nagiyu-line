@@ -6,7 +6,7 @@ using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
 
-using Common.Utilities;
+using CommonKit.Utilities;
 
 using LineBridge.Common.Interfaces.Message;
 using LineBridge.Common.Models.Message;

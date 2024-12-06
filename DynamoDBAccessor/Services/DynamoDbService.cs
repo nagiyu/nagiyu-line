@@ -9,7 +9,9 @@ using Amazon.DynamoDBv2;
 using Amazon.DynamoDBv2.DataModel;
 using Amazon.DynamoDBv2.Model;
 
-using Common.Utilities;
+using CommonKit.Utilities;
+
+using SettingsManager.Services;
 
 using DynamoDBAccessor.Interfaces;
 using DynamoDBAccessor.Models;
@@ -18,14 +20,21 @@ namespace DynamoDBAccessor.Services
 {
     public class DynamoDbService : IDynamoDbService
     {
+        /// <summary>
+        /// AppSettingsService
+        /// </summary>
+        private readonly AppSettingsService appSettingsService;
+
         private readonly AmazonDynamoDBClient client;
         private readonly DynamoDBContext context;
 
-        public DynamoDbService()
+        public DynamoDbService(AppSettingsService appSettingsService)
         {
-            var region = AppSettings.GetSetting("AWS:Region");
-            var accessKey = AppSettings.GetSetting("AWS:AccessKey");
-            var secretKey = AppSettings.GetSetting("AWS:SecretKey");
+            this.appSettingsService = appSettingsService;
+
+            var region = appSettingsService.GetValueByKey("AWS:Region");
+            var accessKey = appSettingsService.GetValueByKey("AWS:AccessKey");
+            var secretKey = appSettingsService.GetValueByKey("AWS:SecretKey");
 
             client = new AmazonDynamoDBClient(accessKey, secretKey, RegionEndpoint.GetBySystemName(region));
 
@@ -41,8 +50,8 @@ namespace DynamoDBAccessor.Services
 
             var queryRequest = new QueryRequest
             {
-                TableName = AppSettings.GetSetting("AWS:DynamoDB:TableName"), // テーブル名
-                IndexName = AppSettings.GetSetting("AWS:DynamoDB:IndexName"), // GSIの名前
+                TableName = await appSettingsService.GetValueByKeyAsync("AWS:DynamoDB:TableName"), // テーブル名
+                IndexName = await appSettingsService.GetValueByKeyAsync("AWS:DynamoDB:IndexName"), // GSIの名前
                 KeyConditionExpression = "UserId = :userId AND EventTimestamp >= :oneHourAgo",
                 ExpressionAttributeValues = new Dictionary<string, AttributeValue>
                 {
@@ -56,7 +65,7 @@ namespace DynamoDBAccessor.Services
             var response = await client.QueryAsync(queryRequest);
 
             var resultList = new List<LineMessage>();
-            var maxResults = AppSettings.GetSetting<int>("AWS:DynamoDB:MaxMessages"); // 最大取得件数の設定
+            var maxResults = await appSettingsService.GetValueByKeyAsync<int>("AWS:DynamoDB:MaxMessages"); // 最大取得件数の設定
 
             foreach (var item in response.Items)
             {
@@ -103,8 +112,8 @@ namespace DynamoDBAccessor.Services
             // ベースクエリ作成
             var queryRequest = new QueryRequest
             {
-                TableName = AppSettings.GetSetting("AWS:DynamoDB:TableName"), // テーブル名
-                IndexName = AppSettings.GetSetting("AWS:DynamoDB:IndexName"), // GSIの名前
+                TableName = await appSettingsService.GetValueByKeyAsync("AWS:DynamoDB:TableName"), // テーブル名
+                IndexName = await appSettingsService.GetValueByKeyAsync("AWS:DynamoDB:IndexName"), // GSIの名前
                 KeyConditionExpression = "UserId = :userId AND EventTimestamp BETWEEN :startOfToday AND :startOfTomorrow",
                 ExpressionAttributeValues = new Dictionary<string, AttributeValue>
                 {
@@ -138,7 +147,7 @@ namespace DynamoDBAccessor.Services
 
         public async Task AddLineMessageAsync(LineMessage lineMessage)
         {
-            var tableName = AppSettings.GetSetting("AWS:DynamoDB:TableName");
+            var tableName = await appSettingsService.GetValueByKeyAsync("AWS:DynamoDB:TableName");
 
             var config = new DynamoDBOperationConfig
             {

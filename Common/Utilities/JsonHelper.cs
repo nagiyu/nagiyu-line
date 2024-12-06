@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 using Newtonsoft.Json.Serialization;
 using Newtonsoft.Json;
 
-namespace Common.Utilities
+namespace CommonKit.Utilities
 {
     /// <summary>
     /// JSON シリアライズやキーのキャメルケース変換を行う

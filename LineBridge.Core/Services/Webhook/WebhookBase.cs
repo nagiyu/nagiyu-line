@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 using Microsoft.Extensions.Primitives;
 
-using Common.Utilities;
+using CommonKit.Utilities;
 
 using LineBridge.Common.Enums.Webhook;
 using LineBridge.Common.Interfaces.Webhook;

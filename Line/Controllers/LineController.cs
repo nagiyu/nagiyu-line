@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Primitives;
 
-using Common.Utilities;
+using CommonKit.Utilities;
 
 using LineBridge.Interfaces.Webhook;
 
