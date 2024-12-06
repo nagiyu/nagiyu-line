@@ -141,6 +141,10 @@ namespace DynamoDBAccessor.Services
             // クエリ実行
             var response = await client.QueryAsync(queryRequest);
 
+            LogHelper.WriteLog($"startOfToday: {((DateTimeOffset)startOfToday).ToUnixTimeSeconds()}");
+            LogHelper.WriteLog($"startOfTomorrow: {((DateTimeOffset)startOfTomorrow).ToUnixTimeSeconds()}");
+            LogHelper.WriteLog($"Count: {response.Count}");
+
             // メッセージ数を返す
             return response.Count;
         }
