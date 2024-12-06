@@ -16,6 +16,7 @@
     <ProjectReference Include="..\LineBridge.Common\LineBridge.Common.csproj" />
     <ProjectReference Include="..\LineBridge.Core\LineBridge.Core.csproj" />
     <ProjectReference Include="..\OpenAIConnect.Common\OpenAIConnect.Common.csproj" />
+    <ProjectReference Include="..\SettingsManager\SettingsManager.csproj" />
   </ItemGroup>
 
 </Project>

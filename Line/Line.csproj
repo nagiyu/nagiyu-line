@@ -7,11 +7,17 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="9.0.1" />
+  </ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Include="..\Common\CommonKit.csproj" />
     <ProjectReference Include="..\DynamoDBAccessor\DynamoDBAccessor.csproj" />
     <ProjectReference Include="..\LineBridge\LineBridge.csproj" />
     <ProjectReference Include="..\OpenAIConnect.Common\OpenAIConnect.Common.csproj" />
     <ProjectReference Include="..\OpenAI\OpenAIConnect.csproj" />
+    <ProjectReference Include="..\SettingsManager\SettingsManager.csproj" />
+    <ProjectReference Include="..\SettingsRepository.Common\SettingsRepository.csproj" />
   </ItemGroup>
 
 </Project>

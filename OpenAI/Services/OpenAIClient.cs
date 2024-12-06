@@ -8,6 +8,8 @@ using System.Threading.Tasks;
 
 using CommonKit.Utilities;
 
+using SettingsManager.Services;
+
 using OpenAIConnect.Common.Consts;
 using OpenAIConnect.Common.Interfaces;
 using OpenAIConnect.Common.Models.Request;
@@ -17,11 +19,17 @@ namespace OpenAIConnect.Services
 {
     public class OpenAIClient : IOpenAIClient
     {
+        /// <summary>
+        /// AppSettingsService
+        /// </summary>
+        private readonly AppSettingsService appSettingsService;
+
         private readonly HttpClient httpClient;
         private readonly string baseUrl = "https://api.openai.com";
 
-        public OpenAIClient(HttpClient httpClient)
+        public OpenAIClient(AppSettingsService appSettingsService, HttpClient httpClient)
         {
+            this.appSettingsService = appSettingsService;
             this.httpClient = httpClient;
         }
 
@@ -33,7 +41,7 @@ namespace OpenAIConnect.Services
                 Messages = prompts
             };
 
-            var apiKey = AppSettings.GetSetting("OpenAI:APIKey");
+            var apiKey = await appSettingsService.GetValueByKeyAsync("OpenAI:APIKey");
 
             httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", apiKey);
 

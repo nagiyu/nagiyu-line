@@ -9,6 +9,7 @@
   <ItemGroup>
     <ProjectReference Include="..\Common\CommonKit.csproj" />
     <ProjectReference Include="..\OpenAIConnect.Common\OpenAIConnect.Common.csproj" />
+    <ProjectReference Include="..\SettingsManager\SettingsManager.csproj" />
   </ItemGroup>
 
 </Project>

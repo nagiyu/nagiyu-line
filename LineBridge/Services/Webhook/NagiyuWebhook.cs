@@ -6,6 +6,8 @@ using System.Threading.Tasks;
 
 using CommonKit.Utilities;
 
+using SettingsManager.Services;
+
 using DynamoDBAccessor.Interfaces;
 using DynamoDBAccessor.Models;
 
@@ -29,6 +31,11 @@ namespace LineBridge.Services.Webhook
     public class NagiyuWebhook : WebhookBase, INagiyuWebhook
     {
         /// <summary>
+        /// AppSettingsService
+        /// </summary>
+        private readonly AppSettingsService appSettingsService;
+
+        /// <summary>
         /// DynamoDB サービス
         /// </summary>
         private readonly IDynamoDbService dynamoDbService;
@@ -43,8 +50,9 @@ namespace LineBridge.Services.Webhook
         /// </summary>
         private readonly IReplyMessage replyMessage;
 
-        public NagiyuWebhook(IDynamoDbService dynamoDbService, IOpenAIClient openAIClient, IReplyMessage replyMessage)
+        public NagiyuWebhook(AppSettingsService appSettingsService, IDynamoDbService dynamoDbService, IOpenAIClient openAIClient, IReplyMessage replyMessage)
         {
+            this.appSettingsService = appSettingsService;
             this.dynamoDbService = dynamoDbService;
             this.openAIClient = openAIClient;
             this.replyMessage = replyMessage;
@@ -56,7 +64,7 @@ namespace LineBridge.Services.Webhook
         /// <returns>チャンネルシークレット</returns>
         protected override string GetChannelSecret()
         {
-            return AppSettings.GetSetting("LineSettings:ChannelSecret:Nagiyu");
+            return appSettingsService.GetValueByKey("LineSettings:ChannelSecret:Nagiyu");
         }
 
         /// <summary>
@@ -67,7 +75,7 @@ namespace LineBridge.Services.Webhook
         {
             var messageCount = await dynamoDbService.GetTodayLineMessageCountAsync(source.UserId, new List<string> { LineConsts.RESET_MESSAGE });
 
-            return messageCount >= AppSettings.GetSetting<int>("LineSettings:MaxMessageCount:Nagiyu");
+            return messageCount >= await appSettingsService.GetValueByKeyAsync<int>("LineSettings:MaxMessageCount:Nagiyu");
         }
 
         /// <summary>
@@ -75,7 +83,7 @@ namespace LineBridge.Services.Webhook
         /// </summary>
         protected override async Task SendMaxTalkCountMessage()
         {
-            var accessToken = AppSettings.GetSetting("LineSettings:ChannelAccessToken:Nagiyu");
+            var accessToken = await appSettingsService.GetValueByKeyAsync("LineSettings:ChannelAccessToken:Nagiyu");
 
             var request = new ReplyMessageRequest<TextMessageObject>
             {
@@ -106,7 +114,7 @@ namespace LineBridge.Services.Webhook
                 new RequestMessage
                 {
                     Role = OpenAIEnums.Role.System,
-                    Content = AppSettings.GetSetting("SystemPrompts:Nagiyu")
+                    Content = await appSettingsService.GetValueByKeyAsync("SystemPrompts:Nagiyu")
                 }
             };
 
@@ -148,7 +156,7 @@ namespace LineBridge.Services.Webhook
                 ReplyText = response
             });
 
-            var accessToken = AppSettings.GetSetting("LineSettings:ChannelAccessToken:Nagiyu");
+            var accessToken = await appSettingsService.GetValueByKeyAsync("LineSettings:ChannelAccessToken:Nagiyu");
 
             var request = new ReplyMessageRequest<TextMessageObject>
             {
@@ -171,7 +179,7 @@ namespace LineBridge.Services.Webhook
         /// </summary>
         protected override async Task HandleUndefinedEvent()
         {
-            var accessToken = AppSettings.GetSetting("LineSettings:ChannelAccessToken:Nagiyu");
+            var accessToken = await appSettingsService.GetValueByKeyAsync("LineSettings:ChannelAccessToken:Nagiyu");
 
             var request = new ReplyMessageRequest<TextMessageObject>
             {
