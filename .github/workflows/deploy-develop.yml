@@ -18,14 +18,14 @@ jobs:
       with:
         dotnet-version: 8.0.x
 
-    - name: Update appsettings.json
-      run: echo '${{ secrets.DEVELOP_APPSETTINGS }}' > Line/appsettings.json
-
     - name: Publish with dotnet
       run: dotnet publish --configuration Release Line/Line.csproj
 
     - name: Copy files
       run: cp -r Line/bin/Release/net8.0/publish containers/line/bin
+
+    - name: Update appsettings.json
+      run: echo '${{ secrets.DEVELOP_APPSETTINGS }}' > containers/line/bin/appsettings.json
 
     - name: AWS CLI install
       run: |

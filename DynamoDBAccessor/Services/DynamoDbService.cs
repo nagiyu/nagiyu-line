@@ -135,7 +135,7 @@ namespace DynamoDBAccessor.Services
             var response = await client.QueryAsync(queryRequest);
 
             // メッセージ数を返す
-            return response.Count.Value;
+            return response.Count;
         }
 
         public async Task AddLineMessageAsync(LineMessage lineMessage)
