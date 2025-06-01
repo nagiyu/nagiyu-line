@@ -43,7 +43,11 @@ jobs:
 
     - name: Deploy
       run: |
-        aws ecr get-login-password --region ${{ secrets.AWS_REGION }} | docker login --username AWS --password-stdin ${{ secrets.AWS_REPOSITORY_ID }}.dkr.ecr.ap-northeast-3.amazonaws.com
+        aws ecr get-login-password --region ${{ secrets.AWS_REGION }} | docker login --username AWS --password-stdin ${{ secrets.AWS_REPOSITORY_ID }}.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com
+        cd containers/line
+        docker build -t nagiyu-line .
+        docker tag nagiyu-line:latest ${{ secrets.AWS_REPOSITORY_ID }}.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com/nagiyu-line:latest
+        docker push ${{ secrets.AWS_REPOSITORY_ID }}.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com/nagiyu-line:latest
 
     # - name: Remove Nginx Settings in target path
     #   uses: appleboy/ssh-action@master
