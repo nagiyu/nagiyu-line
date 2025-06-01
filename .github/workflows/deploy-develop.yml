@@ -49,6 +49,10 @@ jobs:
         docker tag nagiyu-line:latest ${{ secrets.AWS_REPOSITORY_ID }}.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com/nagiyu-line:latest
         docker push ${{ secrets.AWS_REPOSITORY_ID }}.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com/nagiyu-line:latest
 
+    - name: Update Lambda Function
+      run: |
+        aws lambda update-function-code --function-name dev-nagiyu-line --image-uri ${{ secrets.AWS_REPOSITORY_ID }}.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com/nagiyu-line:latest
+
     # - name: Remove Nginx Settings in target path
     #   uses: appleboy/ssh-action@master
     #   with:
