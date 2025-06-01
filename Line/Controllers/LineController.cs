@@ -2,13 +2,10 @@
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
-
+using CommonKit.Services;
+using LineBridge.Interfaces.Webhook;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Primitives;
-
-using CommonKit.Utilities;
-
-using LineBridge.Interfaces.Webhook;
 
 namespace Line.Controllers
 {
@@ -16,11 +13,13 @@ namespace Line.Controllers
     {
         private readonly INagiyuWebhook nagiyuWebhook;
         private readonly IGyaruWebhook gyaruWebhook;
+        private readonly LogService logService;
 
-        public LineController(INagiyuWebhook nagiyuWebhook, IGyaruWebhook gyaruWebhook)
+        public LineController(INagiyuWebhook nagiyuWebhook, IGyaruWebhook gyaruWebhook, LogService logService)
         {
             this.nagiyuWebhook = nagiyuWebhook;
             this.gyaruWebhook = gyaruWebhook;
+            this.logService = logService;
         }
 
         [HttpPost]
@@ -35,7 +34,7 @@ namespace Line.Controllers
             }
             catch (System.Exception ex)
             {
-                LogHelper.WriteLog(ex.Message);
+                await logService.WriteLogAsync(ex.Message);
                 return StatusCode(500);
             }
 
@@ -54,7 +53,7 @@ namespace Line.Controllers
             }
             catch (System.Exception ex)
             {
-                LogHelper.WriteLog(ex.Message);
+                await logService.WriteLogAsync(ex.Message);
                 return StatusCode(500);
             }
 

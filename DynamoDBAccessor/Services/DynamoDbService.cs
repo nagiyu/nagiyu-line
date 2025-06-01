@@ -1,20 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
-
 using Amazon;
 using Amazon.DynamoDBv2;
 using Amazon.DynamoDBv2.DataModel;
 using Amazon.DynamoDBv2.Model;
-
-using CommonKit.Utilities;
-
-using SettingsManager.Services;
-
 using DynamoDBAccessor.Interfaces;
 using DynamoDBAccessor.Models;
+using SettingsManager.Services;
 
 namespace DynamoDBAccessor.Services
 {
@@ -142,7 +135,7 @@ namespace DynamoDBAccessor.Services
             var response = await client.QueryAsync(queryRequest);
 
             // メッセージ数を返す
-            return response.Count;
+            return response.Count.Value;
         }
 
         public async Task AddLineMessageAsync(LineMessage lineMessage)
