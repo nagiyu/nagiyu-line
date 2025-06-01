@@ -33,6 +33,8 @@ namespace Line.Controllers
             catch (Exception ex)
             {
                 Console.WriteLine($"Error in GetTest: {ex.Message}");
+                System.Diagnostics.Debug.WriteLine($"Error in GetTest: {ex.Message}");
+                return StatusCode(500);
             }
 
             return Ok();
