@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
@@ -25,7 +26,15 @@ namespace Line.Controllers
         [HttpGet]
         public async Task<IActionResult> GetTest()
         {
-            await logService.WriteLogAsync("Test Get Method.");
+            try
+            {
+                await logService.WriteLogAsync("Test Get Method.");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error in GetTest: {ex.Message}");
+            }
+
             return Ok();
         }
 
