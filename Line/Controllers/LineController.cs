@@ -22,6 +22,20 @@ namespace Line.Controllers
             this.logService = logService;
         }
 
+        [HttpGet]
+        public async Task<IActionResult> GetTest()
+        {
+            await logService.WriteLogAsync("Test Get Method.");
+            return Ok();
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> PostTest()
+        {
+            await logService.WriteLogAsync("Test Post Method.");
+            return Ok();
+        }
+
         [HttpPost]
         public async Task<IActionResult> SendMessage()
         {
