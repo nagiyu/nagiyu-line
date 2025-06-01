@@ -10,7 +10,7 @@ namespace CommonKit.Utilities
     {
         public static void WriteLog(string message)
         {
-            System.IO.File.AppendAllText("output.log", $"{DateTime.Now} {message}\n");
+            // System.IO.File.AppendAllText("output.log", $"{DateTime.Now} {message}\n");
         }
     }
 }
