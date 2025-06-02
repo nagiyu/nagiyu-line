@@ -24,6 +24,12 @@ namespace Line.Controllers
         }
 
         [HttpGet]
+        public IActionResult SimpleGetTest()
+        {
+            return Ok();
+        }
+
+        [HttpGet]
         public async Task<IActionResult> GetTest()
         {
             try
