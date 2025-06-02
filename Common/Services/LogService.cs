@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using Amazon;
 using Amazon.CloudWatchLogs;
 using Amazon.CloudWatchLogs.Model;
 using SettingsManager.Services;
@@ -20,7 +19,8 @@ namespace CommonKit.Services
             var accessKey = appSettingsService.GetValueByKey("AWS:AccessKey");
             var secretKey = appSettingsService.GetValueByKey("AWS:SecretKey");
 
-            cloudWatchLogsClient = new AmazonCloudWatchLogsClient(accessKey, secretKey, RegionEndpoint.GetBySystemName(region)); // デフォルトのクレデンシャルを使用
+            //cloudWatchLogsClient = new AmazonCloudWatchLogsClient(accessKey, secretKey, RegionEndpoint.GetBySystemName(region)); // デフォルトのクレデンシャルを使用
+            cloudWatchLogsClient = new AmazonCloudWatchLogsClient(); // デフォルトのクレデンシャルを使用
         }
 
         public async Task WriteLogAsync(string message)
