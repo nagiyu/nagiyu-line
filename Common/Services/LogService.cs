@@ -1,9 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using Amazon;
 using Amazon.CloudWatchLogs;
 using Amazon.CloudWatchLogs.Model;
-using SettingsManager.Services;
+using Microsoft.Extensions.Configuration;
 
 namespace CommonKit.Services
 {
@@ -13,14 +14,13 @@ namespace CommonKit.Services
         private static readonly string logStreamName = "dev-nagiyu-line"; // ログストリーム名
         private static IAmazonCloudWatchLogs cloudWatchLogsClient;
 
-        public LogService(AppSettingsService appSettingsService)
+        public LogService(IConfiguration configuration)
         {
-            var region = appSettingsService.GetValueByKey("AWS:Region");
-            var accessKey = appSettingsService.GetValueByKey("AWS:AccessKey");
-            var secretKey = appSettingsService.GetValueByKey("AWS:SecretKey");
+            var region = configuration["AWS:Region"];
+            var accessKey = configuration["AWS:AccessKey"];
+            var secretKey = configuration["AWS:SecretKey"];
 
-            //cloudWatchLogsClient = new AmazonCloudWatchLogsClient(accessKey, secretKey, RegionEndpoint.GetBySystemName(region)); // デフォルトのクレデンシャルを使用
-            cloudWatchLogsClient = new AmazonCloudWatchLogsClient(); // デフォルトのクレデンシャルを使用
+            cloudWatchLogsClient = new AmazonCloudWatchLogsClient(accessKey, secretKey, RegionEndpoint.GetBySystemName(region));
         }
 
         public async Task WriteLogAsync(string message)
