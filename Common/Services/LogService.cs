@@ -20,7 +20,16 @@ namespace CommonKit.Services
             var accessKey = configuration["AWS:AccessKey"];
             var secretKey = configuration["AWS:SecretKey"];
 
-            cloudWatchLogsClient = new AmazonCloudWatchLogsClient(accessKey, secretKey, RegionEndpoint.GetBySystemName(region));
+            // accessKeyとsecretKeyが空の場合は、本番環境（Lambda内やIAMロールが設定された環境）とみなし
+            // 認証情報を明示的に指定せずにクライアントを初期化
+            if (string.IsNullOrEmpty(accessKey) || string.IsNullOrEmpty(secretKey))
+            {
+                cloudWatchLogsClient = new AmazonCloudWatchLogsClient(RegionEndpoint.GetBySystemName(region));
+            }
+            else
+            {
+                cloudWatchLogsClient = new AmazonCloudWatchLogsClient(accessKey, secretKey, RegionEndpoint.GetBySystemName(region));
+            }
         }
 
         public async Task WriteLogAsync(string message)
