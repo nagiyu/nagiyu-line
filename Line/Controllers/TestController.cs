@@ -5,7 +5,6 @@ using Microsoft.Extensions.Logging;
 
 namespace Line.Controllers
 {
-    [ApiController]
     public class TestController : Controller
     {
         private readonly ILogger<TestController> _logger;
@@ -18,11 +17,8 @@ namespace Line.Controllers
         }
 
         [HttpGet]
-        [Route("api/test")]
         public async Task<IActionResult> GetTest()
         {
-            _logger.LogInformation("Test Get Method called.");
-
             try
             {
                 await logService.WriteLogAsync("Test Get Method.");
@@ -37,11 +33,8 @@ namespace Line.Controllers
         }
 
         [HttpPost]
-        [Route("api/test")]
         public async Task<IActionResult> PostTest()
         {
-            _logger.LogInformation("Test PostTest Method called.");
-
             try
             {
                 await logService.WriteLogAsync("Test Post Method.");
