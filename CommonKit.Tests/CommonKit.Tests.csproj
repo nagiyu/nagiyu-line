@@ -20,7 +20,6 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Common\CommonKit.csproj" />
-    <ProjectReference Include="..\SettingsManager\SettingsManager.csproj" />
   </ItemGroup>
 
 	<ItemGroup>

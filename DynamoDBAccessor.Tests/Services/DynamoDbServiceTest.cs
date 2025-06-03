@@ -1,35 +1,14 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Configuration;
-
-using CommonKit.Utilities;
-
-using SettingsManager.Services;
-using SettingsRepository;
-
+﻿using System.Diagnostics;
 using DynamoDBAccessor.Interfaces;
 using DynamoDBAccessor.Models;
 using DynamoDBAccessor.Services;
+using Microsoft.Extensions.Configuration;
 
 namespace DynamoDBAccessor.Tests.Services
 {
     [TestClass]
     public class DynamoDbServiceTest
     {
-        /// <summary>
-        /// AppSettingsService
-        /// </summary>
-        private readonly AppSettingsService appSettingsService;
-
-        private AppDbContext context;
-        private IConfiguration configuration;
-
         private readonly IDynamoDbService dynamoDbService;
 
         public DynamoDbServiceTest()
@@ -38,19 +17,9 @@ namespace DynamoDBAccessor.Tests.Services
             var builder = new ConfigurationBuilder()
                 .SetBasePath(basePath)
                 .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true);
-            configuration = builder.Build();
+            var configuration = builder.Build();
 
-            var connectionString = configuration.GetConnectionString("SettingsDBConnection");
-            Debug.WriteLine($"Connection String: {connectionString}");
-
-            var options = new DbContextOptionsBuilder<AppDbContext>()
-                .UseNpgsql(connectionString)
-                .Options;
-            context = new AppDbContext(options);
-
-            appSettingsService = new AppSettingsService(context);
-
-            dynamoDbService = new DynamoDbService(appSettingsService);
+            dynamoDbService = new DynamoDbService(configuration);
         }
 
         [TestMethod]
