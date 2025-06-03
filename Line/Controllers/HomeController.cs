@@ -1,8 +1,7 @@
-using System.Diagnostics;
 using Line.Models;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
+using System.Diagnostics;
 
 namespace Line.Controllers
 {
@@ -10,17 +9,13 @@ namespace Line.Controllers
     {
         private readonly ILogger<HomeController> _logger;
 
-        private readonly IConfiguration configuration;
-
-        public HomeController(ILogger<HomeController> logger, IConfiguration configuration)
+        public HomeController(ILogger<HomeController> logger)
         {
             _logger = logger;
-            this.configuration = configuration;
         }
 
         public IActionResult Index()
         {
-            ViewData["region"] = configuration["AWS:Region"];
             return View();
         }
 
