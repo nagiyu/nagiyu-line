@@ -18,14 +18,14 @@ jobs:
       with:
         dotnet-version: 8.0.x
 
+    - name: Update appsettings.json
+      run: echo '${{ secrets.PRODUCTION_APPSETTINGS }}' > Line/appsettings.json
+
     - name: Publish with dotnet
       run: dotnet publish --configuration Release Line/Line.csproj
 
     - name: Copy files
       run: cp -r Line/bin/Release/net8.0/publish containers/line/bin
-
-    - name: Update appsettings.json
-      run: echo '${{ secrets.PRODUCTION_APPSETTINGS }}' > containers/line/bin/appsettings.json
 
     - name: AWS CLI install
       run: |
@@ -51,4 +51,4 @@ jobs:
 
     - name: Update Lambda Function
       run: |
-        aws lambda update-function-code --function-name dev-nagiyu-line --image-uri ${{ secrets.AWS_REPOSITORY_ID }}.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com/nagiyu-line:latest
+        aws lambda update-function-code --function-name nagiyu-line --image-uri ${{ secrets.AWS_REPOSITORY_ID }}.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com/nagiyu-line:latest
