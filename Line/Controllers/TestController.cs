@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace Line.Controllers
 {
+    [ApiController]
     public class TestController : Controller
     {
         private readonly LogService logService;
