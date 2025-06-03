@@ -10,7 +10,4 @@ COPY ./bin /app
 # Set environment variables
 ENV ASPNETCORE_ENVIRONMENT=Production
 
-# # Expose port
-# EXPOSE 8080
-
 ENTRYPOINT ["dotnet", "Line.dll"]
