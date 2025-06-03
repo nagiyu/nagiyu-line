@@ -13,8 +13,19 @@ jobs:
     steps:
     - uses: actions/checkout@v2
 
+    - name: Setup .NET Core
+      uses: actions/setup-dotnet@v1
+      with:
+        dotnet-version: 8.0.x
+
     - name: Update appsettings.json
       run: echo '${{ secrets.DEVELOP_APPSETTINGS }}' > Line/appsettings.json
+
+    - name: Publish with dotnet
+      run: dotnet publish --configuration Release Line/Line.csproj
+
+    - name: Copy files
+      run: cp -r Line/bin/Release/net8.0/publish containers/line/bin
 
     - name: AWS CLI install
       run: |
@@ -33,6 +44,7 @@ jobs:
     - name: Deploy
       run: |
         aws ecr get-login-password --region ${{ secrets.AWS_REGION }} | docker login --username AWS --password-stdin ${{ secrets.AWS_REPOSITORY_ID }}.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com
+        cd containers/line
         docker build -t nagiyu-line .
         docker tag nagiyu-line:latest ${{ secrets.AWS_REPOSITORY_ID }}.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com/nagiyu-line:latest
         docker push ${{ secrets.AWS_REPOSITORY_ID }}.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com/nagiyu-line:latest
