@@ -7,6 +7,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="AWSSDK.DynamoDBv2" Version="3.7.403.8" />
     <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
   </ItemGroup>
 
@@ -16,7 +17,6 @@
     <ProjectReference Include="..\LineBridge.Common\LineBridge.Common.csproj" />
     <ProjectReference Include="..\LineBridge.Core\LineBridge.Core.csproj" />
     <ProjectReference Include="..\OpenAIConnect.Common\OpenAIConnect.Common.csproj" />
-    <ProjectReference Include="..\SettingsManager\SettingsManager.csproj" />
   </ItemGroup>
 
 </Project>
