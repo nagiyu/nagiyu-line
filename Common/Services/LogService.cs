@@ -24,7 +24,7 @@ namespace CommonKit.Services
             // 認証情報を明示的に指定せずにクライアントを初期化
             if (string.IsNullOrEmpty(accessKey) || string.IsNullOrEmpty(secretKey))
             {
-                cloudWatchLogsClient = new AmazonCloudWatchLogsClient(RegionEndpoint.GetBySystemName(region));
+                cloudWatchLogsClient = new AmazonCloudWatchLogsClient();
             }
             else
             {
