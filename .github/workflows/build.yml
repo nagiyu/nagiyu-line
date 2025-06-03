@@ -19,7 +19,7 @@ jobs:
       run: dotnet publish --configuration Release Line/Line.csproj
 
     - name: Upload build artifact
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@v4
       with:
         name: Line
         path: Line/bin/Release/net8.0/publish

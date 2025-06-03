@@ -1,40 +1,25 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
-
-using CommonKit.Utilities;
-
-using SettingsManager.Services;
-
 using DynamoDBAccessor.Interfaces;
 using DynamoDBAccessor.Models;
-
-using OpenAIConnect.Common.Enums;
-using OpenAIConnect.Common.Interfaces;
-using OpenAIConnect.Common.Models.Request;
-
 using LineBridge.Common.Enums.Message;
 using LineBridge.Common.Interfaces.Message;
 using LineBridge.Common.Models.Message;
 using LineBridge.Common.Models.MessageObjects;
 using LineBridge.Common.Models.Webhook.Events.Message.Objects;
-
-using LineBridge.Core.Services.Webhook;
-
 using LineBridge.Consts;
+using LineBridge.Core.Services.Webhook;
 using LineBridge.Interfaces.Webhook;
+using Microsoft.Extensions.Configuration;
+using OpenAIConnect.Common.Enums;
+using OpenAIConnect.Common.Interfaces;
+using OpenAIConnect.Common.Models.Request;
 
 namespace LineBridge.Services.Webhook
 {
     public class GyaruWebhook : WebhookBase, IGyaruWebhook
     {
-        /// <summary>
-        /// AppSettingsService
-        /// </summary>
-        private readonly AppSettingsService appSettingsService;
-
         /// <summary>
         /// DynamoDB サービス
         /// </summary>
@@ -50,12 +35,14 @@ namespace LineBridge.Services.Webhook
         /// </summary>
         private readonly IReplyMessage replyMessage;
 
-        public GyaruWebhook(AppSettingsService appSettingsService, IDynamoDbService dynamoDbService, IOpenAIClient openAIClient, IReplyMessage replyMessage)
+        private IConfiguration configuration;
+
+        public GyaruWebhook(IDynamoDbService dynamoDbService, IOpenAIClient openAIClient, IReplyMessage replyMessage, IConfiguration configuration)
         {
-            this.appSettingsService = appSettingsService;
             this.dynamoDbService = dynamoDbService;
             this.openAIClient = openAIClient;
             this.replyMessage = replyMessage;
+            this.configuration = configuration;
         }
 
         /// <summary>
@@ -64,7 +51,7 @@ namespace LineBridge.Services.Webhook
         /// <returns>チャンネルシークレット</returns>
         protected override string GetChannelSecret()
         {
-            return appSettingsService.GetValueByKey("LineSettings:ChannelSecret:Gyaru");
+            return configuration["LineSettings:ChannelSecret:Gyaru"];
         }
 
         /// <summary>
@@ -75,7 +62,7 @@ namespace LineBridge.Services.Webhook
         {
             var messageCount = await dynamoDbService.GetTodayLineMessageCountAsync(source.UserId, new List<string> { LineConsts.RESET_MESSAGE });
 
-            return messageCount >= await appSettingsService.GetValueByKeyAsync<int>("LineSettings:MaxMessageCount:Gyaru");
+            return messageCount >= int.Parse(configuration["LineSettings:MaxMessageCount:Gyaru"]);
         }
 
         /// <summary>
@@ -83,7 +70,7 @@ namespace LineBridge.Services.Webhook
         /// </summary>
         protected override async Task SendMaxTalkCountMessage()
         {
-            var accessToken = await appSettingsService.GetValueByKeyAsync("LineSettings:ChannelAccessToken:Gyaru");
+            var accessToken = configuration["LineSettings:ChannelAccessToken:Gyaru"];
 
             var request = new ReplyMessageRequest<TextMessageObject>
             {
@@ -114,7 +101,7 @@ namespace LineBridge.Services.Webhook
                 new RequestMessage
                 {
                     Role = OpenAIEnums.Role.System,
-                    Content = await appSettingsService.GetValueByKeyAsync("SystemPrompts:Gyaru")
+                    Content = configuration["SystemPrompts:Gyaru"]
                 }
             };
 
@@ -156,7 +143,7 @@ namespace LineBridge.Services.Webhook
                 ReplyText = response
             });
 
-            var accessToken = await appSettingsService.GetValueByKeyAsync("LineSettings:ChannelAccessToken:Gyaru");
+            var accessToken = configuration["LineSettings:ChannelAccessToken:Gyaru"];
 
             var request = new ReplyMessageRequest<TextMessageObject>
             {
@@ -179,7 +166,7 @@ namespace LineBridge.Services.Webhook
         /// </summary>
         protected override async Task HandleUndefinedEvent()
         {
-            var accessToken = await appSettingsService.GetValueByKeyAsync("LineSettings:ChannelAccessToken:Gyaru");
+            var accessToken = configuration["LineSettings:ChannelAccessToken:Gyaru"];
 
             var request = new ReplyMessageRequest<TextMessageObject>
             {
