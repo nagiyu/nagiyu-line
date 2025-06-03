@@ -10,8 +10,8 @@ namespace CommonKit.Services
 {
     public class LogService
     {
-        private static readonly string logGroupName = "dev-nagiyu-line"; // ロググループ名
-        private static readonly string logStreamName = "dev-nagiyu-line"; // ログストリーム名
+        private static string logGroupName; // ロググループ名
+        private static string baseLogStreamName; // 基本ログストリーム名
         private static IAmazonCloudWatchLogs cloudWatchLogsClient;
 
         public LogService(IConfiguration configuration)
@@ -19,6 +19,8 @@ namespace CommonKit.Services
             var region = configuration["AWS:Region"];
             var accessKey = configuration["AWS:AccessKey"];
             var secretKey = configuration["AWS:SecretKey"];
+            logGroupName = configuration["AWS:CloudWatch:LogGroupName"];
+            baseLogStreamName = configuration["AWS:CloudWatch:LogStreamName"];
 
             // accessKeyとsecretKeyが空の場合は、本番環境（Lambda内やIAMロールが設定された環境）とみなし
             // 認証情報を明示的に指定せずにクライアントを初期化
@@ -43,11 +45,17 @@ namespace CommonKit.Services
             var putLogEventsRequest = new PutLogEventsRequest
             {
                 LogGroupName = logGroupName,
-                LogStreamName = logStreamName,
+                LogStreamName = GetLogStreamNameWithDate(),
                 LogEvents = new List<InputLogEvent> { logEvent }
             };
 
             await cloudWatchLogsClient.PutLogEventsAsync(putLogEventsRequest);
+        }
+
+        private string GetLogStreamNameWithDate()
+        {
+            var dateStr = DateTime.Now.ToString("yyyy-MM-dd");
+            return $"{baseLogStreamName}-{dateStr}";
         }
     }
 }
