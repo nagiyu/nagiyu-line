@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
@@ -21,36 +20,6 @@ namespace Line.Controllers
             this.nagiyuWebhook = nagiyuWebhook;
             this.gyaruWebhook = gyaruWebhook;
             this.logService = logService;
-        }
-
-        [HttpGet]
-        public IActionResult SimpleGetTest()
-        {
-            return Ok();
-        }
-
-        [HttpGet]
-        public async Task<IActionResult> GetTest()
-        {
-            try
-            {
-                await logService.WriteLogAsync("Test Get Method.");
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"Error in GetTest: {ex.Message}");
-                System.Diagnostics.Debug.WriteLine($"Error in GetTest: {ex.Message}");
-                return StatusCode(500);
-            }
-
-            return Ok();
-        }
-
-        [HttpPost]
-        public async Task<IActionResult> PostTest()
-        {
-            await logService.WriteLogAsync("Test Post Method.");
-            return Ok();
         }
 
         [HttpPost]
