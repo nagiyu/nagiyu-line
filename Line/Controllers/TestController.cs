@@ -15,6 +15,7 @@ namespace Line.Controllers
         }
 
         [HttpGet]
+        [Route("api/test")]
         public async Task<IActionResult> GetTest()
         {
             await logService.WriteLogAsync("Test Get Method.");
@@ -22,6 +23,7 @@ namespace Line.Controllers
         }
 
         [HttpPost]
+        [Route("api/test")]
         public async Task<IActionResult> PostTest()
         {
             await logService.WriteLogAsync("Test Post Method.");
