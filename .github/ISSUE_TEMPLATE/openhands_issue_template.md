@@ -1,3 +1,11 @@
+---
+name: OpenHands Issue
+about: OpenHands 用のテンプレート
+title: ""
+labels: []
+assignees: []
+---
+
 ## 概要 (Summary)
 作業内容を簡潔に記載してください。
 
