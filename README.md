@@ -2,11 +2,10 @@
 
 ## 概要
 
-nagiyu-line は、LINE Messaging API・OpenAI API・AWS DynamoDB/PostgreSQL を活用した会話型AIチャットボットサービスです。
+nagiyu-line は、LINE Messaging API・OpenAI API・AWS DynamoDB を活用した会話型AIチャットボットサービスです。
 
 - LINE での会話を OpenAI (ChatGPT) で生成
 - 会話履歴を DynamoDB に保存
-- システム設定値を PostgreSQL (RDS) から取得
 
 ---
 
@@ -17,7 +16,6 @@ nagiyu-line は、LINE Messaging API・OpenAI API・AWS DynamoDB/PostgreSQL を�
 - **LINE Messaging API**: Webhook イベントの受信・返信送信
 - **OpenAI API**: AIによる会話生成
 - **AWS DynamoDB**: トーク履歴の保存・取得
-- **AWS PostgreSQL (RDS)**: システム設定値の取得
 
 ---
 
@@ -54,7 +52,7 @@ nagiyu-line は、LINE Messaging API・OpenAI API・AWS DynamoDB/PostgreSQL を�
 ### 1. 必要な環境
 - .NET 8.0
 - Docker (開発用)
-- AWS アカウント (DynamoDB, RDS)
+- AWS アカウント (DynamoDB)
 - OpenAI API キー
 
 ### 2. ローカル実行
