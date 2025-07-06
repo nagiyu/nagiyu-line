@@ -9,19 +9,20 @@ namespace Line.Tests
     public class SecretsManagerServiceTest
     {
         [TestMethod]
-        public async Task GetSecretAsync_ReturnsSecret()
+        public async Task GetSecretValueByKeyAsync_ReturnsSecretValue()
         {
             var builder = new ConfigurationBuilder()
                 .AddJsonFile("appsettings.json", optional: true)
                 .AddEnvironmentVariables();
             var configuration = builder.Build();
             var service = new SecretsManagerService(configuration);
-            // テスト用のシークレット名を指定してください
+            // テスト用のシークレット名とキー名を指定してください
             var secretName = "dummy-secret-name";
+            var key = "dummy-key";
             try
             {
-                var secret = await service.GetSecretAsync(secretName);
-                Assert.IsNotNull(secret);
+                var value = await service.GetSecretValueByKeyAsync(secretName, key);
+                Assert.IsNotNull(value);
             }
             catch (Amazon.SecretsManager.Model.ResourceNotFoundException)
             {

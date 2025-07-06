@@ -17,14 +17,27 @@ namespace Line.Services
             _secretsManager = new AmazonSecretsManagerClient(Amazon.RegionEndpoint.GetBySystemName(_region));
         }
 
-        public async Task<string> GetSecretAsync(string secretName)
+        public async Task<string> GetSecretValueByKeyAsync(string secretName, string key)
         {
             var request = new GetSecretValueRequest
             {
                 SecretId = secretName
             };
             var response = await _secretsManager.GetSecretValueAsync(request);
-            return response.SecretString;
+            var secretString = response.SecretString;
+            if (string.IsNullOrEmpty(secretString))
+                return null;
+            try
+            {
+                var dict = System.Text.Json.JsonSerializer.Deserialize<System.Collections.Generic.Dictionary<string, string>>(secretString);
+                if (dict != null && dict.ContainsKey(key))
+                    return dict[key];
+                return null;
+            }
+            catch (System.Text.Json.JsonException)
+            {
+                return null;
+            }
         }
     }
 }
