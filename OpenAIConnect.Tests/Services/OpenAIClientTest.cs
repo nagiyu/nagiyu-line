@@ -26,7 +26,8 @@ namespace OpenAIConnect.Tests.Services
             var configuration = builder.Build();
 
             httpClient = new HttpClient();
-            openAIClient = new OpenAIClient(httpClient, configuration);
+            var secretsManagerService = new Line.Services.SecretsManagerService(configuration);
+            openAIClient = new OpenAIClient(httpClient, configuration, secretsManagerService);
         }
 
         [TestMethod]

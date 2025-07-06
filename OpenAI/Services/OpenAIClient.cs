@@ -17,11 +17,13 @@ namespace OpenAIConnect.Services
         private readonly HttpClient httpClient;
         private readonly string baseUrl = "https://api.openai.com";
         private IConfiguration configuration;
+        private readonly Line.Services.SecretsManagerService secretsManagerService;
 
-        public OpenAIClient(HttpClient httpClient, IConfiguration configuration)
+        public OpenAIClient(HttpClient httpClient, IConfiguration configuration, Line.Services.SecretsManagerService secretsManagerService)
         {
             this.httpClient = httpClient;
             this.configuration = configuration;
+            this.secretsManagerService = secretsManagerService;
         }
 
         public async Task<string> SendRequestAsync(List<RequestMessage> prompts)
@@ -32,7 +34,7 @@ namespace OpenAIConnect.Services
                 Messages = prompts
             };
 
-            var apiKey = configuration["OpenAI:APIKey"];
+            var apiKey = await secretsManagerService.GetSecretAsync("OpenAI:APIKey");
 
             httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", apiKey);
 

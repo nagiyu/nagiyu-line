@@ -17,7 +17,14 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddTransient<IGyaruWebhook, GyaruWebhook>();
 builder.Services.AddTransient<INagiyuWebhook, NagiyuWebhook>();
 builder.Services.AddTransient<IReplyMessage, ReplyMessage>();
-builder.Services.AddTransient<IOpenAIClient, OpenAIClient>();
+builder.Services.AddTransient<Line.Services.SecretsManagerService>();
+builder.Services.AddTransient<IOpenAIClient, OpenAIClient>(provider =>
+{
+    var httpClient = provider.GetRequiredService<IHttpClientFactory>().CreateClient();
+    var configuration = provider.GetRequiredService<IConfiguration>();
+    var secretsManagerService = provider.GetRequiredService<Line.Services.SecretsManagerService>();
+    return new OpenAIClient(httpClient, configuration, secretsManagerService);
+});
 builder.Services.AddTransient<IDynamoDbService, DynamoDbService>();
 builder.Services.AddTransient<LogService>();
 
